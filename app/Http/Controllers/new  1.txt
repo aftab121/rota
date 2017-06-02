@@ -1,0 +1,13 @@
+$result = Shift::where('assigned_to','=',$userData['assigned_to'])->where('shifts.id','!=',$shift->id)
+						->where('shift_start_time', '>', $shift_start_time)
+  ->orWhere('shift_start_time', '<', $shift_end_time)
+  ->orWhere('shift_end_time', '<', $shift_start_time) 
+  ->orWhere('shift_end_time', '<=', $shift_end_time)->where(function($query) use($shift_start_time,$shift_end_time) {
+               // $query->whereBetween('shift_start_time', array($shift_start_time,$shift_end_time))
+				//->orwhereBetween('shift_end_time', array($shift_start_time,$shift_end_time));
+				$query->where('shift_start_time','>=',$shift_start_time)->orWhere('shift_end_time','<',$shift_start_time)
+				->orWhere('shift_start_time','>',$shift_end_time)->orWhere('shift_end_time','<=',$shift_end_time);
+				//$query->where(DB::raw("DATE_FORMAT(shift_start_time, '%h:%i %p')"), '>=', date('%h:%i %p',strtotime($shift_start_time)))->orWhere(DB::raw("DATE_FORMAT(shift_end_time, '%h:%i %p')"),'<',date('%h:%i %p',strtotime($shift_start_time)))
+				//->orWhere(DB::raw("DATE_FORMAT(shift_start_time, '%h:%i %p')"),'>',date('%h:%i %p',strtotime($shift_end_time)))->orWhere(DB::raw("DATE_FORMAT(shift_end_time, '%h:%i %p')"),'<=',date('%h:%i %p',strtotime($shift_end_time)));
+            })->where('shifts.status','!=',3)->where('shift_date','=',$shift_date)->get()
+			select * from `shifts` where `assigned_to` = 11 and shift_start_time between STR_TO_DATE('2017-03-28 15:45:00', '%Y-%m-%d %H:%i:%s') and STR_TO_DATE('2017-03-28 17:45:00', '%Y-%m-%d %H:%i:%s') and `shifts`.`status` != 3 ORDER BY `id` DESC

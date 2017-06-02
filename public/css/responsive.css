@@ -1,0 +1,406 @@
+/*
+Template Name: Ubold Dashboard
+Author: CoderThemes
+Email: coderthemes@gmail.com
+File: Responsive
+*/
+@media only screen and (max-width: 6000px) and (min-width: 700px) {
+.wrapper.right-bar-enabled .right-bar {
+	right: 0;
+	z-index: 99;
+}
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+.email-msg {
+	display: none;
+}
+}
+@media (min-width: 1102px) and (max-width: 1200px) {
+.employee_btn {
+	width: 100%;
+}
+.position_btn {
+	width: 100%;
+}
+.calender-table {
+	min-height: 366px;
+}
+}
+@media (min-width: 768px) and (max-width: 991px) {
+.custom-calendar .col-md-3 {
+	width: 24%;
+}
+.custom-calendar .col-md-9 {
+	width: 76%;
+}
+.employee_btn {
+	width: 100%;
+}
+.position_btn {
+	width: 100%;
+}
+
+body {
+	overflow-x: hidden;
+}
+
+}
+@media (max-width: 602px) {
+.removeButton .btn-danger {
+	margin-top: 10px;
+}
+}
+ @media (max-width: 767px) {
+.dropdown-menu {
+	background: #fff;
+}
+.navbar-toggle {
+	margin-top: 12px;
+}
+.budget-left {
+	display: none;
+}
+.res-budget {
+	width: 27%;
+	display: inline-block;
+	float: left;
+}
+.sales_table {
+	display: inline-block;
+	width: 73%;
+	float: left;
+	padding: 0;
+	margin: 0 !important;
+}
+.custom-calendar .col-md-3 {
+	width: 100%;
+}
+.custom-calendar .col-md-9 {
+	width: 100%;
+}
+body {
+	overflow-x: hidden;
+}
+.enlarged .left.side-menu {
+	margin-left: -75px;
+}
+.content-page {
+	margin-left: 0px !important;
+}
+.footer {
+	left: 0px !important;
+}
+.mobile-sidebar {
+	left: 0px;
+}
+.mobile-content {
+	left: 250px;
+	right: -250px;
+}
+.wrapper-page {
+	width: 90%;
+}
+.wizard > .steps > ul > li {
+	width: 100%;
+}
+.wizard > .content {
+	padding: 0px !important;
+}
+.wizard > .content > .body {
+	float: none;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	padding: 0%;
+}
+.wizard.vertical > .steps {
+	display: inline;
+	float: none;
+	width: 100%;
+}
+.wizard.vertical > .content {
+	display: inline;
+	float: none;
+	margin: 0%;
+	width: 100%;
+}
+.navbar-nav .open .dropdown-menu {
+	background-color: #fff;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+	left: auto;
+	position: absolute;
+	right: 0;
+}
+.todo-send {
+	margin-top: 10px;
+	padding-left: 15px;
+}
+.chat-inputbar {
+	padding-left: 15px;
+}
+.chat-send {
+	margin-top: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.dataTables_wrapper .col-xs-6 {
+	width: 100%;
+	text-align: left;
+}
+.product-search {
+	margin-bottom: 30px;
+}
+.top-menu-item-xs {
+	display: inline-flex !important;
+}
+.dropdown-menu-lg {
+	width: 240px !important;
+}
+}
+@media (min-width: 767px) and (max-width:992px) {
+.custom-calendar .col-md-9 {
+	width: 76%;
+	display: inline-block;
+	float: left;
+}
+.custom-calendar .col-md-3 {
+	width: 24%;
+	display: inline-block;
+	float: left;
+}
+.decWeek {
+	float: left;
+	margin-right: 2px;
+}
+}
+@media (max-width: 768px) {
+	.alert
+	{
+	margin:10px 5px;
+	}
+	
+	fieldset {
+	padding: 0px !important;
+}
+.topbar .topbar-left {
+	width: 140px;
+}
+legend {
+	width: 100% !important;
+	margin-bottom: 13px !important;
+	font-size: 18px !important;
+	font-weight: 600;
+}
+.logo {
+	margin: 0px 0px 0px 15px;
+}
+.navbar-right {
+	display: inline-block;
+	float: right;
+}
+.custom {
+	display: inline-block;
+	float: left;
+}
+.topbar .nav > li > a {
+	padding: 0px 10px;
+}
+.table-striped {
+	width: 1000px;
+	overflow-x: auto;
+	max-width: 1000px;
+}
+.navbar-collapse.in {
+	overflow-y: inherit;
+}
+.nav > li {
+	position: relative;
+	display: inline-block;
+}
+.res-padding {
+	padding: 0px;
+}
+.staff-photo {
+	margin-bottom: 15px;
+}
+.store-list {
+	height: auto;
+}
+.btn-purple {
+	margin-top: 15px;
+}
+.content-height {
+	margin-top: 15px;
+}
+fieldset {
+	padding: 0px !important;
+}
+.topbar .topbar-left {
+	width: 140px;
+}
+legend {
+	width: 100% !important;
+	margin-bottom: 13px !important;
+	font-size: 18px !important;
+	font-weight: 600;
+}
+.btn-icon {
+	padding: 2px 5px;
+}
+}
+@media (max-width: 480px) {
+.all-btns .btn {
+	width: 48%;
+	margin-bottom:2px;
+}
+.navbar-nav .open .dropdown-menu {
+	background-color: #36404a;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+	left: auto;
+	position: absolute;
+	right: 0;
+}
+.custom .dropdown-menu > li > a {
+	border-bottom: 1px solid #565656;
+	color: #d2d2d2 !important;
+}
+.navbar-right {
+	display: block;
+	width: 100%;
+}
+.custom {
+	display: block;
+	width: 100%;
+}
+.topbar .navbar-nav .open .dropdown-menu {
+	position: relative;
+}
+.topbar .nav > li {
+	width: 100%;
+	display: block;
+}
+.topbar .nav > li a {
+	width: 100%;
+	display: block;
+}
+.res-budget {
+	width: 100%;
+	display: inline-block;
+	float: left;
+}
+.sales_table {
+	width: 100%;
+	margin: 10px 0px 0px 0px !important;
+}
+.navbar-collapse.in {
+	overflow-y: inherit;
+}
+.card-gray {
+	padding: 20px 10px;
+}
+.card-box {
+	padding: 0px;
+}
+.custom-res {
+	width: 100%;
+	float: left;
+}
+.store-list {
+	height: auto;
+}
+.modal-dialog {
+	width: auto !important;
+	margin: 30px auto;
+}
+.side-menu {
+	z-index: 10 !important;
+}
+.button-menu-mobile {
+	display: block;
+}
+.search-bar {
+	display: none !important;
+}
+.ms-container {
+	width: 100%;
+}
+.nav.nav-tabs + .tab-content {
+	padding: 10px;
+}
+#wrapper.enlarged .topbar .topbar-left {
+	margin-left: 8px;
+}
+}
+ @media (max-width: 420px) {
+.hide-phone {
+	display: none !important;
+}
+.staff-photo {
+	margin-bottom: 15px;
+}
+}
+/* Container-alt */
+@media (min-width: 768px) {
+.container-alt {
+	width: 750px;
+}
+#weekDays .btn {
+	font-size: 13px;
+	margin-bottom: 3px;
+	padding: 6px 5px;
+	width: auto;
+}
+}
+@media (max-width:600px) {
+.res-4 {
+	width: 100%;
+}
+.res-8 {
+	width: 100%;
+}
+.TextBoxesGroup {
+	display: block;
+}
+}
+@media (min-width: 992px) {
+.container-alt {
+	width: 970px;
+}
+}
+@media (min-width: 1200px) {
+.container-alt {
+	width: 1170px;
+}
+}
+@media (max-width: 419px) {
+.topbar-left {
+	width: 70px !important;
+}
+.logo .icon-c-logo {
+	display: inline-block !important;
+	line-height: 58px !important;
+}
+.logo span {
+	display: none !important;
+}
+.content-page {
+	margin-left: 70px;
+}
+.forced .side-menu.left {
+	box-shadow: 0 12px 12px rgba(0, 0, 0, 0.1);
+}
+.enlarged .side-menu.left {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+}
+.conversation-list .conversation-text, .conversation-list .odd .conversation-text {
+	width: 100% !important;
+}
+}
+@media (max-width:380px) {
+.check-design .col-md-4 {
+	width: 100%;
+}
+.removeButton .btn-danger {
+	margin-top: 10px;
+}
+}

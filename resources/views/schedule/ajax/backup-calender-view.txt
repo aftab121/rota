@@ -1,0 +1,311 @@
+<div class="card-box m-t-20">
+<?php //print_r($PositionLists);exit; ?>
+	<table class="table table-striped table-head">
+	<thead>
+	  <?php
+			$days = ($current_back*7);
+			$start_date = date('M d',strtotime('+'.$days.' days'));
+			?>
+	  <tr>
+	    <?php for($i=0;$i<=6;$i++){ ?> 
+		<th><?php echo date('M d',strtotime('+'.$i.' days',strtotime($start_date))); ?> </th>
+		<?php } ?>
+		
+	  </tr>
+	</thead>
+	<tbody>
+				<?php if(@$UserLists):
+				foreach($UserLists as $User):?>
+                  <tr>
+                    <td colspan="7"><b style="float:left;"><?php echo $User['firstname'].' '.$User['lastname'];?></b></td>
+                  </tr>
+                  <tr>
+				   <?php for($i=0;$i<=6;$i++){ 
+				      $current_date = date('Y-m-d',strtotime('+'.$i.' days',strtotime($start_date)));
+				   ?>
+                    <td><span>
+                      <?php 
+					  if(@$User['Shift']):
+						    foreach($User['Shift'] as $shift):
+						    if(strtotime($shift['shift_date'])==strtotime($current_date)){
+						  ?>
+						  <div class="time-div clearfix">
+							<span class="pull-left"><?php echo $shift['shift_start_time'].' - '.$shift['shift_end_time']; ?></span><br>
+							<span class="pull-left"><?php echo $shift['position_name']; ?></span>
+							<span class="pull-right icns">
+								 <a href="#" class="EditmodelUserShow" data-toggle="modal"  data-shift_id = "<?php echo $shift['id']; ?>" data-user_id="<?php echo $User['id']; ?>"  data-target="#myEditModal"><i class="icon-pencil icons" style ="color:green;"></i></a>
+								<a href="#" class="deletemodelUserShow" data-shift_id = "<?php echo $shift['id']; ?>"><i class="icon-close icons" style = "color:red;"></i></a>
+							</span>
+						   </div>
+							<?php  }
+							  endforeach;
+							  endif;
+							?>
+					  <a href="#" class="modelShowUsers" data-toggle="modal" data-meal_break = "<?php echo $Location['default_meal_break']; ?>" data-end_time = "<?php echo $Location['default_end_time']; ?>" data-start_time = "<?php echo $Location['default_start_time']; ?>" data-location_id = "<?php echo $Location['location_id']; ?>"  data-date="<?php echo $current_date; ?>" data-user_id="<?php echo $User['id']; ?>"  data-target="#myModal"><i class="icon-plus icons"></i></a>
+						</span>
+                  </td>
+				  <?php } ?>
+                </tr>
+				<?php endforeach;
+				 elseif(@$PositionLists):
+				
+				foreach($PositionLists as $Position):?>
+                  <tr>
+                    <td colspan="7"><b style="float:left;"><?php echo $Position['position_name'];?></b></td>
+                  </tr>
+				 <tr>
+				   <?php for($i=0;$i<=6;$i++){ 
+				      $current_date = date('Y-m-d',strtotime('+'.$i.' days',strtotime($start_date)));
+				   ?>
+                    <td><span>
+                      <?php // echo "<pre>"; print_r($Position);
+					  if(@$Position['Shift']):
+						    foreach($Position['Shift'] as $shift):
+						    if(strtotime($shift['shift_date'])==strtotime($current_date)){
+						  ?>
+						  <div class="time-div clearfix">
+							<span class="pull-left"><?php echo $shift['shift_start_time'].' - '.$shift['shift_end_time']; ?></span><br>
+							<span class="pull-left"><?php echo $shift['firstname'].' '.$shift['lastname']; ?></span>
+							<span class="pull-right icns">
+								<a href="#"></a>
+								<a href="#" class="EditmodelShow" data-toggle="modal"  data-shift_id = "<?php echo $shift['id']; ?>" data-position_id="<?php echo $Position['id']; ?>"  data-target="#myEditModal"><i class="icon-pencil icons" style ="color:green;"></i></a>
+								<a href="#" class="deletemodelUserShow" data-shift_id = "<?php echo $shift['id']; ?>"><i class="icon-close icons" style = "color:red;"></i></a>
+							</span>
+						   </div>
+							<?php  }
+							  endforeach;
+							  endif;
+							?>
+					  <a href="#" class="modelShow" data-toggle="modal" data-meal_break="<?php echo $Location['default_meal_break']; ?>" data-end_time="<?php echo $Location['default_end_time']; ?>" data-start_time="<?php echo $Location['default_start_time']; ?>" data-location_id="<?php echo $Location['location_id']; ?>"  data-date="<?php echo $current_date; ?>" data-position_id="<?php echo $Position['id']; ?>"  data-target="#myModal"><i class="icon-plus icons"></i></a>
+						</span>
+                  </td>
+				  <?php } ?>
+                  
+                </tr>
+                
+				<?php endforeach; 
+				else: ?>
+				  <tr>
+                    <td colspan="7"><b style="float:left;">Unassigned</b></td>
+                  </tr>
+                  <tr>
+                    <td><span>
+                      <div class="time-div clearfix"><span class="pull-left">9:00 am - 12:00 am</span>
+						<span class="pull-right icns">
+							<a href="#"><i class="icon-docs icons" style="color:green"></i></a>
+							<a href="#"><i class="icon-close icons" style="color:red"></i></a>
+						</span>
+                    </div>
+					<a href="#" data-toggle="modal" data-target="#myModal"><i class="icon-plus icons"></i></a></span> 
+                      
+                      <!-- Modal -->
+                  </td>
+                  <td><span><a href="#"><i class="icon-plus icons"></i></a></span></td>
+                  <td><span><a href="#"><i class="icon-plus icons"></i></a></span></td>
+                  <td><span><a href="#"><i class="icon-plus icons"></i></a></span></td>
+                  <td><span><a href="#"><i class="icon-plus icons"></i></a></span></td>
+                  <td><span><a href="#"><i class="icon-plus icons"></i></a></span></td>
+                  <td><span><a href="#"><i class="icon-plus icons"></i></a></span></td>
+                </tr>
+				<?php endif; ?>
+			</tbody>	  
+	</table>
+</div>
+<div class="modal fade" id="myEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="refreshDiv();">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<h4 class="modal-title" id="myModalLabel">Selected Shift</h4>
+	  </div>
+	   {!! Form::open(array('url'=> '#','id'=>'EditShiftForm','class'=>'form-horizontal m-t-20')) !!} 
+	  <div class="modal-body">
+		<div class="row">
+			 <div class="col-md-12" id="editsuccess"></div>
+			 <div class="col-md-12" id="editfailure"></div>
+		</div>
+		<div class="row">
+			<input id="shift_editlocation_id" name="location_id" type="hidden"  value="" placeholder = "shift_location_id" class="form-control" >
+			<input id="shift_editdate" name="shift_date" type="hidden" value="" placeholder = "shift_date" class="form-control" >
+			<input id="shift_edituser_id" name="shift_user_id" type="hidden" value="" placeholder = "shift_user_id" class="form-control" >
+			<input id="shift_editposition_id" name="shift_position_id" type="hidden" value="" placeholder = "shift_position_id" class="form-control" >
+			<input id="shift_id" name="shift_id" type="hidden" value="" placeholder = "shift_id" class="form-control" >
+			  <div class="col-md-6">
+				<div class="form-group">
+				  <label>Start</label>
+				  <div class="input-group m-b-15">
+					<div class="bootstrap-timepicker">
+					  <input name="shift_start_time" id="Edittimepicker" type="text" class="form-control">
+					</div>
+					<span class="input-group-addon bg-custom b-0 text-white"><i class="glyphicon glyphicon-time"></i></span> </div>
+				</div>
+			  </div>
+			  <div class="col-md-6">
+				<div class="form-group">
+				  <label>End</label>
+				  <div class="input-group m-b-15">
+					<div class="bootstrap-timepicker">
+					  <input id="Edittimepicker2" name="shift_end_time"  type="text" class="form-control">
+					</div>
+					<span class="input-group-addon bg-custom b-0 text-white"><i class="glyphicon glyphicon-time"></i></span> </div>
+				</div>
+			  </div>
+			  <div class="col-md-6">
+				<div class="form-group">
+				  <label>Meal break</label>
+				  <input type="number" id="editmeal_break" name="meal_break" value="15" min="15" max="400"  step="15" class="form-control">
+				</div>
+			  </div>
+			  <div class="col-md-6">
+				<div class="form-group">
+				  <label>End Option</label>
+				  <select name="end_option" id="editend_option" class="form-control">
+					<option value="1">Time</option>
+					<option value="2">Close</option>
+					<option value="3">Required</option>
+				  </select>
+				</div>
+			  </div>
+			<div class="col-md-12">
+			<div class="form-group">
+			  <label>Select from the list</label>
+			  <?php //echo "<pre>";print_r($PositionLists);?>
+				<select name="<?php echo (@$UserLists)?'position_id[]':'assigned_to[]';?>"  id="<?php echo (@$UserLists)?'edit_position_id_list':'edit_assigned_to_list';?>" class="form-control multiple"></select>
+		</div>
+		</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+			   <div class="pull-left clearfix ">
+				<h4><b class="shift_length">2.75 &nbsp; hrs </b></h4>
+				<p>Shift Length</p>
+			   </div>
+			</div>
+			<div class="col-md-6">
+				<div class="pull-right clearfix">
+					<h4><b>$  &nbsp;  N/A</b></h4>
+					<p>Shift Cost</p>
+				</div>
+			</div>
+		</div>
+	  
+	</div>
+	<div class="modal-footer">
+	  <button type="button" class="btn btn-default" data-dismiss="modal" onclick="refreshDiv();">Close</button>
+	  <button type="submit" class="btn btn-primary">Save changes</button>
+	</div>
+	{!! Form::close() !!}
+  </div>
+</div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<h4 class="modal-title" id="myModalLabel">Selected Shift</h4>
+	  </div>
+	   {!! Form::open(array('url'=> '#','id'=>'AddShiftForm','class'=>'form-horizontal m-t-20')) !!} 
+	  <div class="modal-body">
+		<div class="row">
+			 <div class="col-md-12" id="addsuccess"></div> 
+			 <div class="col-md-12" id="addfailure"></div>
+		</div>
+		<div class="row">
+			<input id="shift_location_id" name="location_id" type="hidden" value="" placeholder = "shift_location_id" class="form-control">
+			<input id="shift_date" name="shift_date" type="hidden" value="" placeholder = "shift_date" class="form-control">
+			<input id="shift_user_id" name="shift_user_id" type="hidden" value="" placeholder = "shift_user_id" class="form-control">
+			<input id="shift_position_id" name="shift_position_id" type="hidden" value="" placeholder = "shift_position_id" class="form-control">
+			  <div class="col-md-6">
+				<div class="form-group">
+				  <label>Start</label>
+				  <div class="input-group m-b-15">
+					<div class="bootstrap-timepicker">
+					  <input name="shift_start_time" id="Edittimepicker" type="text" class="form-control">
+					</div>
+					<span class="input-group-addon bg-custom b-0 text-white"><i class="glyphicon glyphicon-time"></i></span> </div>
+				</div>
+			  </div>
+			  <div class="col-md-6">
+				<div class="form-group">
+				  <label>End</label>
+				  <div class="input-group m-b-15">
+					<div class="bootstrap-timepicker">
+					  <input id="Edittimepicker2" name="shift_end_time" type="text" class="form-control">
+					</div>
+					<span class="input-group-addon bg-custom b-0 text-white"><i class="glyphicon glyphicon-time"></i></span> </div>
+				</div>
+			  </div>
+			  <div class="col-md-6">
+				<div class="form-group">
+				  <label>Meal break</label>
+				  <input type="number" id="meal_break" name="meal_break" value="15" min="15" max="400"  step="15" class="form-control">
+				</div>
+			  </div>
+			  <div class="col-md-6">
+				<div class="form-group">
+				  <label>End Option</label>
+				  <select name="end_option" class="form-control">
+					<option value="1">Time</option>
+					<option value="2">Close</option>
+					<option value="3">Required</option>
+				  </select>
+				</div>
+			  </div>
+			<div class="col-md-12">
+			<div class="form-group">
+			  <label>Select from the list</label>
+			  <?php //echo "<pre>";print_r($PositionLists);?>
+				<select name="<?php echo (@$UserLists)?'position_id[]':'assigned_to[]';?>"  id="<?php echo (@$UserLists)?'position_id_list':'assigned_to_list';?>" multiple class="form-control multiple"></select>
+		</div>
+		</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+			   <div class="pull-left clearfix ">
+				<h4><b class="shift_length">2.75 &nbsp; hrs </b></h4>
+				<p>Shift Length</p>
+			   </div>
+			</div>
+			<div class="col-md-6">
+				<div class="pull-right clearfix">
+					<h4><b>$  &nbsp;  N/A</b></h4>
+					<p>Shift Cost</p>
+				</div>
+			</div>
+		</div>
+	  
+	</div>
+	<div class="modal-footer">
+	  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	  <button type="submit" class="btn btn-primary">Save changes</button>
+	</div>
+	{!! Form::close() !!}
+  </div>
+</div>
+</div>
+<script>
+jQuery(document).ready(function() {
+jQuery('body #Edittimepicker').timepicker({
+	<?php if(Session::get('CompanyDetails.time_format')==12){?>
+	defaultTIme : false
+	<?php }else{?>
+	showMeridian : false
+	<?php } ?>
+});
+
+jQuery('body #Edittimepicker2').timepicker({
+	<?php if(Session::get('CompanyDetails.time_format')==12){?>
+	defaultTIme : false
+	<?php }else{?>
+	showMeridian : false
+	<?php } ?>
+});
+});
+</script>
+<script type="text/javascript" src="http://www.datejs.com/build/date.js"></script>
