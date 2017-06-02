@@ -14,7 +14,6 @@
 		<link href="{{ asset('plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
 		<link href="{{ asset('plugins/clockpicker/css/bootstrap-clockpicker.min.css') }}" rel="stylesheet">
 		<link href="{{ asset('plugins/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet">
-        
         <!--data table-->
         <link href="{{ asset('plugins/datatables/jquery.dataTables.min.css') }}" rel="stylesheet">
         <link href="{{ asset('plugins/datatables/buttons.bootstrap.min.css') }}" rel="stylesheet">

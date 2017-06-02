@@ -43,7 +43,7 @@
 											</div>
 										</div>
 										<div class="form-group clearfix">
-											<label class="col-lg-4 control-label " for="password">Lastname *</label>
+											<label class="col-lg-4 control-label " for="password">Lastname </label>
 											<div class="col-lg-8">
 												{!! Form::text('lastname',@$inputData['lastname'],array('class'=>'form-control','placeholder'=>'Lastname')) !!}
 											</div>
@@ -55,7 +55,7 @@
 											</div>
 										</div>
 										<div class="form-group clearfix">
-											<label class="col-lg-4 control-label " for="confirm">Contact No *</label>
+											<label class="col-lg-4 control-label " for="confirm">Contact No </label>
 											<div class="col-lg-8">
 											   {!! Form::text('business_contact_no',@$inputData['business_contact_no'],array('class'=>'form-control','placeholder'=>'Contact No.','maxlength'=>'12','onkeypress'=>'return isNumber(event)')) !!}
 											</div>

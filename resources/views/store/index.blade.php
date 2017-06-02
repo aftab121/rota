@@ -22,16 +22,16 @@
         <div class="row">
           <div class="col-sm-12">
             <div class="page-header-2">
-              <h4 class="page-title">Location</h4>
+              <h4 class="page-title">Store</h4>
               <ol class="breadcrumb">
                 <li> <a href="#">Home</a> </li>
-                <li class="active"> Location </li>
+                <li class="active"> Store </li>
               </ol>
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3 col-sm-3">
+          <div class="col-md-3">
             <div class="store-location-list">
               <form>
                 <div class="input-group m-b-10">
@@ -48,7 +48,7 @@
                     <?php if($Locationlist):
 							  foreach($Locationlist as $Location):
 							 ?>
-                    <li data-id ="{{ $Location['location_id']}}" class="liclick liclick_<?php echo $Location['location_id'];?>"><?php echo $Location['location_name'];?> </li>
+                    <li data-id ="{{ $Location['location_id']}}" class="liDiv_<?php echo $Location['location_id'];?>"><span class="liLocationNameDiv<?php echo $Location['location_id'];?>">  <?php echo $Location['location_name'];?></span><span style="float:right"><a href="#" data-id ="{{ $Location['location_id']}}" class="liclick liclick_<?php echo $Location['location_id'];?>"><i class="icon-pencil icons" style="color:green;" title="Edit"></i></a>&nbsp;&nbsp;<a href="#" class="deletemodelLocationShow"  data-toggle="modal"  data-target="#deleteLocationModal" data-location_id="<?php echo $Location['location_id'];?>" title="Delete"><i class="icon-close icons" style="color:red;" ></i></a></span></li>
                     <?php endforeach;
 							 endif;?>
                   </ul>
@@ -56,7 +56,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-9 col-sm-9">
+          <div class="col-md-9">
             <button type="button" class="btn btn-purple pull-right waves-effect waves-light" id="addPosition"> <i class="fa fa-plus"></i> Add New</button>
           </div>
           <div class="col-md-9 content-height" id="AddFormDiv">
@@ -64,8 +64,10 @@
             <div > {!! Form::open(array('url' => '#','id'=>'addLocationForm','class'=>'form-horizontal m-t-20')) !!}
               <ul class="nav nav-tabs">
                 <li class="active"> <a href="#l1" data-toggle="tab" aria-expanded="false"> <span class="visible-xs"><i class="fa fa-cube" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-cube" aria-hidden="true"></i> Location Details</span> </a> </li>
-                <li > <a href="#l2" data-toggle="tab" aria-expanded="true"> <span class="visible-xs"><i class="fa fa-map-marker" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-map-marker" aria-hidden="true"></i> Positions for this Location</span> </a> </li>
-                <li class=""> <a href="#l3" data-toggle="tab" aria-expanded="false"><span class="visible-xs"> <i class="fa fa-location-arrow" aria-hidden="true"></i> </span><span class="hidden-xs"> <i class="fa fa-location-arrow" aria-hidden="true"></i> Employees who work at this Location </span> </a> </li>
+                <li > <a href="#l2" data-toggle="tab" aria-expanded="true"> <span class="visible-xs"><i class="fa fa-location-arrow" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-location-arrow" aria-hidden="true"></i> Positions for this Location</span> </a> </li>
+                <li class=""> <a href="#l3" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                <span class="hidden-xs"><i class="fa fa-map-marker" aria-hidden="true"></i>
+Employees who work at this Location </span> </a> </li>
               </ul>
               <div class="tab-content clearfix">
                 <div class="box-header with-border" id="addsuccess"></div>
@@ -111,7 +113,7 @@
                   </div>
                   <div class="clear"></div>
                   <hr>
-                  <div class="col-md-4">
+                  <div class="col-md-4 col-sm-6">
                     <div class="form-group">
                       <label>Default Start Time</label>
                       <div class="input-group m-b-15">
@@ -121,7 +123,7 @@
                       
                     </div>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-4 col-sm-6">
                     <div class="form-group">
                       <label>Default End Time</label>
                       <div class="input-group m-b-15">
@@ -141,6 +143,9 @@
                       
                     </div>
                   </div>
+				  <div class="m-t-20 col-md-12">
+					  <button type="submit" class="btn btn-success waves-effect waves-light">Save</button>
+				  </div>
                 </div>
                 <div class="tab-pane" id="l2">
                   <div class="positions-tab">
@@ -160,7 +165,7 @@
 									 if($Positionlist):
 									    foreach($Positionlist as $Position):
 									 ?>
-                          <div class="col-md-4">
+                          <div class="col-md-4 col-sm-4">
                             <div class="emp-name add_position_name_list ">
                               <label>
                                 <input name="position_ids[]" type="checkbox" value="<?php echo $Position['id'];?>" />
@@ -173,6 +178,9 @@
                       </div>
                     </div>
                   </div>
+				  <div class="m-t-20 col-md-12">
+					  <button type="submit" class="btn btn-success waves-effect waves-light">Save</button>
+				  </div>
                 </div>
                 <div class="tab-pane" id="l3">
                   <div class="staff-list-main">
@@ -188,19 +196,17 @@
                     <div class="staff-list">
                       <div class="row">
                         <div class="check-design">
-                          <?php 
-								 if($Stafflist):
-									foreach($Stafflist as $Staff):
+                          <?php if($Stafflist):
+							foreach($Stafflist as $Staff):
 								 ?>
-                          <div class="col-md-4">
+                          <div class="col-md-4 col-sm-4">
                             <div class="emp-name add_staff_name_list ">
                               <label>
                                 <input name="staff_ids[]" type="checkbox" value="<?php echo $Staff['id'];?>" />
                                 <?php echo $Staff['firstname'].' '.$Staff['lastname'];?></label>
                             </div>
                           </div>
-                          <?php endforeach;
-								 endif; ?>
+                          <?php endforeach; endif; ?>
                         </div>
                         <div class="m-t-20 col-md-12">
                           <button type="submit" class="btn btn-success waves-effect waves-light">Save</button>
@@ -212,6 +218,37 @@
               </div>
               {!! Form::close() !!} </div>
           </div>
+<!--Starts : Delete Position -->
+<div class="modal fade" id="deleteLocationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" > <span aria-hidden="true">&times;</span> </button>
+        <h4 class="modal-title" id="myModalLabel">Confirm </h4>
+      </div>
+      {!! Form::open(array('url'=> '#','id'=>'DeleteLocationForm','class'=>'form-horizontal m-t-20')) !!}
+      <div class="modal-body clearfix">
+        <div class="row">
+			<div class="positions-tab">
+				<h4 id="successMessage">Are you sure you want to delete Location <span id= "span_location_title"></span> ?</h4>
+				<input type="hidden" name="location_id_todelete" id="location_id_todelete" value=""/>
+			</div>
+        </div>
+      </div>
+      <div class="modal-footer" >
+		 <div id="btn_display">
+			<button type="button" class="btn btn-danger" data-dismiss="modal" >Cancel</button>
+			<button type="submit" class="btn btn-primary">Delete</button>
+		 </div>
+		 <div id="btn_display1" style="display:none;">
+       		 <button type="button" class="btn btn-danger" data-dismiss="modal" >OK</button>
+		 </div>
+      </div>
+      {!! Form::close() !!}  
+	  </div>
+  </div>
+</div>
+  <!--Ends : Delete Position-->
           <div id="EditFormDiv"></div>
         </div>
       </div>
@@ -253,8 +290,38 @@
 			}
 		});
 	});
-	
-	$(document).ready(function () {
+	$(document).ready(function (){
+		$('body').on('click','.deletemodelLocationShow', function(evt){
+			var location_id = $(this).attr('data-location_id');
+			$('#location_id_todelete').val(location_id);
+			$('#btn_display1').hide();
+			$('#btn_display').show();
+			$('#successMessage').html('Are you sure you want to delete Location ?');
+		});
+		$('body').on('submit', '#DeleteLocationForm', function(evt){
+		evt.preventDefault();
+		var data = new FormData(this);
+		var location_id_todelete = $('#location_id_todelete').val();
+		evt.preventDefault();		
+		$.ajax({
+			url: "{{ url('Store/DeleteLocation') }}",
+			type: 'POST',
+			data:data,
+			dataType: 'json',
+			cache: false,
+			processData: false,
+			contentType: false,
+			async: false,
+			success: function(res){
+				$('#successMessage').text(res.message);
+				$('.liDiv_'+location_id_todelete).remove();
+				$('#AddFormDiv').show();
+				$('#EditFormDiv').hide();
+				$('#btn_display1').show();
+				$('#btn_display').hide();
+			}
+		});
+	});	
 		$('body #timepicker').timepicker({
 			<?php if(Session::get('CompanyDetails.time_format')==12){?>
 			defaultTIme : false
@@ -328,15 +395,15 @@
 				contentType: false,
 				async: false,
 				success: function(res){
-					$('body').find('.liclick_'+hidden_id).html(res.li);
-					if (res.Status=='success') {
+					$('body').find('.liLocationNameDiv'+hidden_id).html(res.li);
+					if (res.Status=='success'){
 						$('#editsuccess').html('<div class="row"><div class="col-md-12"><div class="alert alert-success  alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><span>' + res.message + '</span></div></div></div>');
-					} else {
+					}else {
 						$('#editsuccess').html('');
 					}
-					if (res.Status=='danger') {
+					if (res.Status=='danger'){
 						$('#editfailure').html('<div class="row"><div class="col-md-12"><div class="alert alert-danger  alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><span>' + res.message + '</span></div></div></div>');
-					} else {
+					}else{
 						$('#editfailure').html('');
 					}
 				}

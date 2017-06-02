@@ -24,7 +24,6 @@ class DateFormatController extends Controller {
 		if(!empty($inputData)){
 			$flag = 0;
 			$location_id = $inputData['location_id'];
-			//print_r($location_id);die;
 			$start_date = date('Y-m-d',strtotime($inputData['current_delete_start_date']));
 			$end_date = date('Y-m-d',strtotime($inputData['current_delete_end_date']));
 			$shifts = Shift::where('location_id','=',$location_id)->where('shifts.status','!=',3)->where('shift_date','>=',$start_date)->where('shift_date','<=',$end_date)->get();
@@ -38,7 +37,6 @@ class DateFormatController extends Controller {
 					$userData['status'] = 3;
 					//echo $deletedData['id']; echo "==";
 					if(Shift::where('id',@$deletedData['id'])->update($userData)){
-						
 						$shift_date = $deletedData['shift_date'];
 						$location_id = $deletedData['location_id'];
 						$shift_start_time = $deletedData['shift_start_time'];
@@ -140,6 +138,137 @@ and (   (`shift_start_time` < "'.$shift_start_time.'" AND  `shift_end_time` > "'
 			$response['current_delete_end_date'] = date('Y-m-d',strtotime($end_date));
 			return $response;die;
 		}	
+	}
+	
+	public function WeeklyTarget(){
+		$response = array();
+		$inputData =Input::all(); 
+		if(!empty($inputData)){
+			$company_id = Session::get('CompanyDetails.id');
+			$company_percentage_growth = Session::get('CompanyDetails.percentage_growth');
+		    $company_last_year_target = Session::get('CompanyDetails.last_year_target');
+			$company_yearly_company_target = Session::get('CompanyDetails.yearly_company_target');
+			$company_yearly_store_target = Session::get('CompanyDetails.yearly_store_target');
+			$company_monthly_company_target = Session::get('CompanyDetails.monthly_company_target');
+			$company_monthly_store_target = Session::get('CompanyDetails.monthly_store_target');
+		    $current_company_target = $company_last_year_target+($company_last_year_target*($company_percentage_growth/100));
+			$response ='';
+			$location_id = $inputData['location_id'];
+			$Location = Location::where('locations.location_id','=',$location_id)->where('locations.status','!=',4)->first();
+			$staff_ids = $Location['staff_ids'];
+			$current_back = $inputData['current_back'];
+			$type_set = $inputData['type_set'];
+			$days = ($current_back*7);
+			$start_date = date('Y-m-d',strtotime($days.' days'));
+			$end_date = date('Y-m-d',strtotime('+6 days',strtotime($start_date)));
+			$total_shifts  = Shift::where('location_id','=',$location_id)->where('shifts.status','!=',3)->where('shift_date','>=',$start_date)->where('shift_date','<=',$end_date)->get();
+			$filled_shifts = Shift::where('location_id','=',$location_id)->where('shifts.assigned_to','!=',0)->where('shifts.status','!=',3)->where('shifts.shift_date','>=',$start_date)->where('shifts.shift_date','<=',$end_date)->leftJoin('wages','wages.wage_user_id', '=', 'shifts.assigned_to')->select('shifts.*','wages.*')->get();
+			$total_shifts  = count($total_shifts->toArray());
+			$countfilled_shifts = count($filled_shifts->toArray());
+			$total_hrs = 0;
+			foreach($filled_shifts->toArray() as $fillShift){
+				if(strtotime($fillShift['shift_start_time'])!==strtotime($fillShift['shift_end_time'])){
+					$diff = strtotime($fillShift['shift_start_time']) - strtotime($fillShift['shift_end_time']);
+					$diff = abs($diff)- $fillShift['meal_break']*60;
+					$diff_in_hrs = $diff/3600;
+					$total_hrs = $total_hrs + abs($diff_in_hrs);
+				}
+			}
+			$response['total_shifts'] = $total_shifts;
+			$total_hrs = number_format(abs($total_hrs),2);
+			if($inputData['type_set']=='staff'){
+				$UserTargetList = array();
+				$position_id = $Location['position_ids'];
+				$position_id = explode(',',$position_id);
+				$PositionLists = Position::whereIn('id',$position_id)->select(DB::raw("replace(group_concat(staff_ids),',,',',') as staff_ids"))->get();
+				$PositionLists = $PositionLists->toArray();
+				
+				if(!empty($PositionLists[0]['staff_ids'])){
+					$PositionLists = explode(',',$PositionLists[0]['staff_ids']);
+					$position_staff_ids =  array_filter($PositionLists, function($value) { return $value !== ''; });
+				}
+				
+				$staff_ids =  explode(',',$staff_ids);
+				$staff_ids = array_unique(array_merge($staff_ids, $position_staff_ids));
+				$UserLists = User::where('users.status','!=',4)->where('company_id','=',$company_id)->whereIn('id',$staff_ids)->get();
+				$UsersIds  = User::where('users.status','!=',4)->where('company_id','=',$company_id)->whereIn('id',$staff_ids)->select(DB::raw("replace(group_concat(id),',,',',') AS ids"))->get();
+				$j=0;
+				
+				foreach($UserLists as $UserList){
+					$user_id = $UserList['id'];
+					$shifts = Shift::where('assigned_to','=',$user_id)->where('location_id','=',$location_id)->where('shifts.status','=',1)->where('shift_date','>=',$start_date)->where('shift_date','<=',$end_date)->leftJoin('users','users.id', '=', 'shifts.id')->leftJoin('positions','positions.id', '=', 'shifts.position_id')->leftJoin('wages','wages.wage_user_id', '=', 'shifts.assigned_to')->select('positions.position_name','users.firstname','users.lastname','shifts.*','wages.wage_id','wages.wage_user_id','wages.standard_rate','wages.saturday_rate','wages.sunday_rate','wages.holiday_rate','wages.overtime_rate','wages.yearly_rate')->get();
+					$shifts = $shifts->toArray();
+					$user_total_hrs = 0;
+					foreach($shifts as $fillShift ){
+						if(strtotime($fillShift['shift_start_time'])!==strtotime($fillShift['shift_end_time'])){
+							$diff = strtotime($fillShift['shift_start_time']) - strtotime($fillShift['shift_end_time']);
+							$diff = abs($diff)- $fillShift['meal_break']*60;
+							$diff_in_hrs = $diff/3600;
+							$user_total_hrs = $user_total_hrs + abs($diff_in_hrs);
+						}
+					}
+					if($company_yearly_company_target==1){
+						$UserTargetList[$j]['user_id'] = $user_id;
+						$UserTargetList[$j]['name'] = $UserList['firstname'].' '.$UserList['lastname'];
+						$UserTargetList[$j]['user_total_hrs'] = $user_total_hrs;
+						$UserTargetList[$j]['user_total_hrs_percentage'] = number_format((($total_hrs>0)?(($user_total_hrs/$total_hrs)*100):0),2);
+						if($total_hrs>0){
+							$UserTargetList[$j]['user_week_target'] = number_format((($user_total_hrs/$total_hrs)*($current_company_target/52)),2);
+						}else{
+							$UserTargetList[$j]['user_week_target'] = 0;
+						}
+					}else if($company_yearly_store_target==1){
+						$store_last_year_target = Session::get('CompanyDetails.store_last_year_target');
+		    			$store_percentage_growth= Session::get('CompanyDetails.store_percentage_growth');
+						$current_store_target = $store_last_year_target+($store_last_year_target*($store_percentage_growth/100));
+						$UserTargetList[$j]['user_id'] = $user_id;
+						$UserTargetList[$j]['name'] = $UserList['firstname'].' '.$UserList['lastname'];
+						$UserTargetList[$j]['user_total_hrs'] = $user_total_hrs;
+						$UserTargetList[$j]['user_total_hrs_percentage'] = number_format((($total_hrs>0)?(($user_total_hrs/$total_hrs)*100):0),2);
+						if($total_hrs>0){
+							$UserTargetList[$j]['user_week_target'] = number_format((($user_total_hrs/$total_hrs)*($current_store_target/52)),2);
+						}else{
+							$UserTargetList[$j]['user_week_target'] = 0;
+						}
+					}else if($company_monthly_company_target==1){
+						$current_month = date('n');
+						$company_last_month_target = Session::get('CompanyDetails.last_month_target_'.$current_month);
+						$company_last_month_percentage_growth = Session::get('CompanyDetails.last_month_percentage_growth_'.$current_month);
+						$Location = Location::where('locations.location_id','=',$location_id)->where('locations.status','!=',4)->first();
+						$location_monthly_store_target = $Location['location_monthly_store_target_'.$current_month];
+						$company_current_store_target = $company_last_month_target+($company_last_month_target*($company_last_month_percentage_growth/100));
+						$company_current_store_target = $company_current_store_target+($company_current_store_target*($location_monthly_store_target/100));
+						$UserTargetList[$j]['user_id'] = $user_id;
+						$UserTargetList[$j]['name'] = $UserList['firstname'].' '.$UserList['lastname'];
+						$UserTargetList[$j]['user_total_hrs'] = $user_total_hrs;
+						$UserTargetList[$j]['user_total_hrs_percentage'] = number_format((($total_hrs>0)?(($user_total_hrs/$total_hrs)*100):0),2);
+						if($total_hrs>0){
+							$week = date('j')/7;
+							$UserTargetList[$j]['user_week_target'] = number_format((($user_total_hrs/$total_hrs)*($company_current_store_target/$week)),2);
+						}else{
+							$UserTargetList[$j]['user_week_target'] = 0;
+						}
+					}else if($company_monthly_store_target==1){
+						$current_month = date('n');
+						$company_last_month_store_target = Session::get('CompanyDetails.last_month_store_target_'.$current_month);
+						$company_last_month_store_percentage_growth = Session::get('CompanyDetails.last_month_store_percentage_growth_'.$current_month);
+						$company_current_store_target = $company_last_month_store_target+($company_last_month_store_target*($company_last_month_store_percentage_growth/100));
+						$UserTargetList[$j]['user_id'] = $user_id;
+						$UserTargetList[$j]['name'] = $UserList['firstname'].' '.$UserList['lastname'];
+						$UserTargetList[$j]['user_total_hrs'] = $user_total_hrs;
+						$UserTargetList[$j]['user_total_hrs_percentage'] = number_format((($total_hrs>0)?(($user_total_hrs/$total_hrs)*100):0),2);
+						if($total_hrs>0){
+							$week = date('j')/7;
+							$UserTargetList[$j]['user_week_target'] = number_format((($user_total_hrs/$total_hrs)*($company_current_store_target/$week)),2);
+						}else{
+							$UserTargetList[$j]['user_week_target'] = 0;
+						}
+					}
+					$j++;
+				}
+			}
+			return view('schedule/ajax/listWeeklyTarget')->with('UserTargetList',$UserTargetList); die;
+		}
 	}
 	public function CopyWeekOption(){
 		$response = array();
@@ -398,9 +527,7 @@ and (   (`shift_start_time` < "'.$shift_start_time.'" AND  `shift_end_time` > "'
 									$resultset = SalesPerDay::where('company_id','=',$company_id)->where('location_id','=',$location_id)->where('sales_shift_date','=',$shift_date)->update($editData);
 									}
 									// For Sales Calculation :End 
-									
 								}
-							 
 							}
 							$flag = 1;
 						 }else{
@@ -409,7 +536,6 @@ and (   (`shift_start_time` < "'.$shift_start_time.'" AND  `shift_end_time` > "'
 						}
 					}
 			}
-				
 			if($flag==1){
 				$response =array('Status' =>'success','message' => 'Week Shift copied successfully.');
 			}elseif($flag==2){
@@ -653,6 +779,7 @@ and (   (`shift_start_time` < "'.$shift_start_time.'" AND  `shift_end_time` > "'
 		$response = array();
 		$inputData =Input::all(); 
 		if(!empty($inputData)){
+			$unassignedshifts = array();
 			$location_id = $inputData['location_id'];
 			$company_id = Session::get('CompanyDetails.id');
 			$Location = Location::where('locations.location_id','=',$location_id)->where('locations.status','!=',4)->first();
@@ -671,7 +798,6 @@ and (   (`shift_start_time` < "'.$shift_start_time.'" AND  `shift_end_time` > "'
 			// For Notes End
 			// For Sales 
 			$SalesPerDays = SalesPerDay::where('company_id','=',$company_id)->where('location_id','=',$location_id)->where('sales_shift_date','>=',$start_date)->where('sales_shift_date','<=',$end_date)->get();
-			
 			// For Sales End 
 			$UserLists = array();
 			$PositionLists = array();
@@ -696,7 +822,7 @@ and (   (`shift_start_time` < "'.$shift_start_time.'" AND  `shift_end_time` > "'
 			if($inputData['type_set']=='staff'){
 				$position_id = $Location['position_ids'];
 				$position_id = explode(',',$position_id);
-				$PositionLists = Position::whereIn('id',$position_id)->select(DB::raw('group_concat(staff_ids) as staff_ids'))->get();
+				$PositionLists = Position::whereIn('id',$position_id)->select(DB::raw("replace(group_concat(staff_ids),',,',',') as staff_ids"))->get();
 				$PositionLists = $PositionLists->toArray();
 				if(!empty($PositionLists[0]['staff_ids'])){
 					$PositionLists = explode(',',$PositionLists[0]['staff_ids']);
@@ -705,25 +831,22 @@ and (   (`shift_start_time` < "'.$shift_start_time.'" AND  `shift_end_time` > "'
 				$staff_ids =  explode(',',$staff_ids);
 				$staff_ids = array_unique(array_merge($staff_ids, $position_staff_ids));
 				$UserLists = User::where('users.status','!=',4)->where('company_id','=',$company_id)->whereIn('id',$staff_ids)->get();
-				$UsersIds  = User::where('users.status','!=',4)->where('company_id','=',$company_id)->whereIn('id',$staff_ids)->select(DB::raw('GROUP_CONCAT(id) AS ids'))->get();
+				$UsersIds  = User::where('users.status','!=',4)->where('company_id','=',$company_id)->whereIn('id',$staff_ids)->select(DB::raw("replace(group_concat(id),',,',',') AS ids"))->get();
 				$j=0;
-				
 				foreach($UserLists as $UserList){
 					$user_id = $UserList['id'];
 					$shifts = Shift::where('assigned_to','=',$user_id)->where('location_id','=',$location_id)->where('shifts.status','!=',3)->where('shift_date','>=',$start_date)->where('shift_date','<=',$end_date)->leftJoin('users','users.id', '=', 'shifts.id')->leftJoin('positions','positions.id', '=', 'shifts.position_id')->leftJoin('wages','wages.wage_user_id', '=', 'shifts.assigned_to')->select('positions.position_name','users.firstname','users.lastname','shifts.*','wages.wage_id','wages.wage_user_id','wages.standard_rate','wages.saturday_rate','wages.sunday_rate','wages.holiday_rate','wages.overtime_rate','wages.yearly_rate')->get();
 					$unpublishedshifts = Shift::where('assigned_to','=',$user_id)->where('location_id','=',$location_id)->where('shift_date','>=',$start_date)->where('shift_date','<=',$end_date)->where('shifts.status','!=',3)->where('shifts.status','!=',1)->get();
 					$unpublished_count = $unpublished_count + count($unpublishedshifts->toArray());
-					
 					$UserLists[$j]['Shift'] = $shifts->toArray();
 					$j++;
 				}
-				$unassignedshifts = Shift::where('assigned_to','=',0)->where('location_id','=',$location_id)->where('shifts.status','!=',3)->where('shift_date','>=',$start_date)->where('shift_date','<=',$end_date)->leftJoin('users','users.id', '=', 'shifts.id')->leftJoin('positions','positions.id', '=', 'shifts.position_id')->leftJoin('wages','wages.wage_user_id', '=', 'shifts.assigned_to')->select('positions.position_name','users.firstname','users.lastname','shifts.*','wages.wage_id','wages.wage_user_id','wages.standard_rate','wages.saturday_rate','wages.sunday_rate','wages.holiday_rate','wages.overtime_rate','wages.yearly_rate')->get();
-				$unassignedshifts = $unassignedshifts->toArray();
+				$unassignedshiftsLIST = Shift::where('assigned_to','=',0)->where('location_id','=',$location_id)->where('shifts.status','!=',3)->where('shift_date','>=',$start_date)->where('shift_date','<=',$end_date)->leftJoin('users','users.id', '=', 'shifts.id')->leftJoin('positions','positions.id', '=', 'shifts.position_id')->leftJoin('wages','wages.wage_user_id', '=', 'shifts.assigned_to')->select('positions.position_name','users.firstname','users.lastname','shifts.*','wages.wage_id','wages.wage_user_id','wages.standard_rate','wages.saturday_rate','wages.sunday_rate','wages.holiday_rate','wages.overtime_rate','wages.yearly_rate')->get();
+				$unassignedshifts = $unassignedshiftsLIST->toArray();
 			}
 			$holidayList = HolidayLists::where('company_id','=',$company_id)->where('status','!=',4)->select('holiday_date')->get();
 			$holidayList = $holidayList->toArray();
 			$holiday_list = array_column($holidayList,'holiday_date');
-			
 			array_walk($holiday_list, function(&$items){
 				$items = strtotime($items);
 			});

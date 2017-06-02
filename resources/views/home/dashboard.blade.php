@@ -117,50 +117,49 @@ background: #5fbeaa;
           </div>
         </div>
         <div class="row">
-          <div class="col-md-8 col-sm-8 col-xs-12">
+          <div class="col-md-8">
             <div class="row">
               <div class="card-box card-box-custom clearfix">
                 <fieldset style="background:#fff;">
                   <legend>What's new in the app?</legend>
-                  <div class="col-md-6 col-sm-6 text-center">
+                  <div class="col-md-6 text-center"> 
                     <div class="card-box  red"> <i class="fa fa-check-circle" aria-hidden="true"></i>
                       <p>A new way to get started! The dashboard.</p>
                     </div>
-                  </div>
-                  <div class="col-md-6 col-sm-6 text-center">
+                     </div>
+                  <div class="col-md-6 text-center"> 
                     <div class="card-box blue"> <i class="fa fa-check-circle" aria-hidden="true"></i>
                       <p>A new way to get started! The dashboard.</p>
                     </div>
-                  </div>
-                  <div class="col-md-6 col-sm-6 text-center">
+                    </div>
+                  <div class="col-md-6 text-center"> 
                     <div class="card-box primary"> <i class="fa fa-check-circle" aria-hidden="true"></i>
                       <p>A new way to get started! The dashboard.</p>
                     </div>
-                  </div>
-                  <div class="col-md-6 col-sm-6 text-center">
+                    </div>
+                  <div class="col-md-6 text-center"> 
                     <div class="card-box  yellow"> <i class="fa fa-check-circle" aria-hidden="true"></i>
                       <p>A new way to get started! The dashboard.</p>
-                    </div>
-                  </div>
+                    </div> </div>
                 </fieldset>
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-sm-4 col-xs-12">
+          <div class="col-md-4">
             <div class="row">
               <div class="card-box card-box-custom quick-links clearfix">
                 <fieldset style="background:#fff;">
                   <legend>Dashboard quick links</legend>
-                  <?php if(Session::get('Users.type')==1||Session::get('Users.type')==2):?>
-                  <div class="col-md-12"> <a href="{{URL('Company')}}">Manage Company Settings</a> </div>
-                  <div class="col-md-12"> <a href="{{URL('Store')}}">Add / Edit Store</a> </div>
+		  <?php if(Session::get('Users.type')==1||Session::get('Users.type')==2):?>
+		  <div class="col-md-12"> <a href="{{URL('Company')}}">Manage Company Settings</a> </div>
+	          <div class="col-md-12"> <a href="{{URL('Store')}}">Add / Edit Store</a> </div>
                   <div class="col-md-12"> <a href="{{URL('Position')}}">Add / Edit Positions</a> </div>
                   <div class="col-md-12"> <a href="{{URL('Staff')}}">Add / Edit staff</a> </div>
                   <div class="col-md-12"> <a href="{{URL('Position')}}">Create  &  Publish shift</a> </div>
-                  <div class="col-md-12"> <a href="{{URL('Schedule')}}">Manage Schedules</a> </div>
-                  <?php else: ?>
-                  <div class="col-md-12"> <a href="{{URL('Employee')}}">Employee</div>
-                  <?php endif;?>
+		<div class="col-md-12"> <a href="{{URL('Schedule')}}">Manage Schedules</a> </div>
+		  <?php else: ?>
+					<div class="col-md-12"> <a href="{{URL('Employee')}}">Employee</a></div>
+		  <?php endif;?>
                 </fieldset>
               </div>
             </div>

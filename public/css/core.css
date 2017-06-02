@@ -1521,9 +1521,9 @@ body.fixed-left .side-menu.left {
 #wrapper.enlarged .footer {
 	left: 70px;
 }
-/*#wrapper.enlarged .topbar .topbar-left {
+#wrapper.enlarged .topbar .topbar-left {
 	width: 70px !important;
-}*/
+}
 #wrapper.enlarged .topbar .topbar-left .logo span {
 	display: none;
 	opacity: 0;

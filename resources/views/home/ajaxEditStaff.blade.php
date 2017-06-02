@@ -4,10 +4,10 @@
 </div>
 {!! Form::open(array('url' => '#','id'=>'editform','class'=>'form-horizontal m-t-20')) !!}  
 <ul class="nav nav-tabs">
-  <li class="active"><a href="#editl1" data-toggle="tab" aria-expanded="false"> <span class="visible-xs"><i class="fa fa-users" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-users" aria-hidden="true"></i> Employee Details</span> </a> </li>
+  <li class="active"> <a href="#editl1" data-toggle="tab" aria-expanded="false"> <span class="visible-xs"><i class="fa fa-users" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-users" aria-hidden="true"></i> Employee Details</span> </a> </li>
   <li > <a href="#editl2" data-toggle="tab" aria-expanded="true"> <span class="visible-xs"><i class="fa fa-location-arrow" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-location-arrow" aria-hidden="true"></i> Locations </span> </a> </li>
-  <li class=""> <a href="#editl3" data-toggle="tab" aria-expanded="false"> <span class="visible-xs"> <i class="fa fa-star" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-star" aria-hidden="true"></i> Positions</span> </a> </li> 
-  <li class=""> <a href="#editl4" data-toggle="tab" aria-expanded="false"> <span class="visible-xs"> <i class="fa fa-usd" aria-hidden="true"></i> </span> <span class="hidden-xs"><i class="fa fa-usd" aria-hidden="true"></i> Salary / Wage</span> </a> </li>
+  <li class=""> <a href="#editl3" data-toggle="tab" aria-expanded="false">  <i class="fa fa-star" aria-hidden="true"></i> <span class="visible-xs"><i class="fa fa-star" aria-hidden="true"></i></span> <span class="hidden-xs"> Positions</span> </a> </li> 
+  <li class=""> <a href="#editl4" data-toggle="tab" aria-expanded="false"> <i class="fa fa-usd" aria-hidden="true"></i> <span class="visible-xs"><i class="fa fa-usd" aria-hidden="true"></i></span> <span class="hidden-xs"> Salary / Wage</span> </a> </li>
   
 </ul>
 <div class="tab-content clearfix">
@@ -17,7 +17,7 @@
 	
 	  <div class="staff-profile">
 		
-		 <div class="col-md-4 col-sm-4 ">
+		 <div class="col-md-4">
 		  <div class="row">
 			 <div class="staff-photo">
 			     <?php $img = (!empty($inputData['profile_pic']))?('profile/'.$inputData['profile_pic']):'noimage.png';  ?>
@@ -32,7 +32,7 @@
 			 </div>
 			 </div>
 		 </div>
-		 <div class="col-md-8 col-sm-8 ">
+		 <div class="col-md-8">
 			 <div class="profile-form">
 				 <h4  class="header-title m-t-0 m-b-20 col-md-12"><strong>Personal Information</strong></h4>
 				 <div  class="col-md-6">
@@ -89,10 +89,7 @@
 		  </div>
 		 <div class="clear"></div>
 		<hr>
-		 
-		 
-		 
-		 <div>
+		 <div class="row">
 			<h4  class="header-title m-t-0 m-b-20 col-md-12"><strong>Access Privileges</strong></h4>
 			<div class=" col-md-12">
 			 <div class="form-group ">
@@ -153,6 +150,11 @@
 			  </div>
 			  </div>
 		 </div>
+		 <div class="m-t-20 col-md-12">
+			    <?php if($inputData['status']==2):?><button type="submit"  id="submit_users" class="btn btn-success waves-effect waves-light">Update & Send Invitation</button>
+				<?php else: ?><button type="submit"  id="submit_users" class="btn btn-success waves-effect waves-light">Update</button><?php endif;?>
+			</div>
+			
 	  </div>
   </div>  
   <div class="tab-pane" id="editl2">
@@ -170,7 +172,7 @@
 				 if($Locationlist):
 					foreach($Locationlist as $location):
 				 ?>
-				 <div class="col-md-4 col-xs-6 col-sm-6">
+				 <div class="col-md-4">
 					 <div class="emp-name edit_location_name_list">
 						 <label class="<?php echo (in_array($location['location_id'],$location_ids))?'checked':'';?>"> <input name="location_ids[]" type="checkbox" value="<?php echo $location['location_id'];?>" <?php echo (in_array($location['location_id'],$location_ids))?'checked=""':'';?> /><?php echo $location['location_name'];?></label>
 					 </div>
@@ -181,6 +183,11 @@
 			</div>
 		 </div> 
    </div>
+   <div class="m-t-20 col-md-12">
+			    <?php if($inputData['status']==2):?><button type="submit"  id="submit_users" class="btn btn-success waves-effect waves-light">Update & Send Invitation</button>
+				<?php else: ?><button type="submit"  id="submit_users" class="btn btn-success waves-effect waves-light">Update</button><?php endif;?>
+			</div>
+			
   </div>
   <div class="tab-pane" id="editl3">
 	 <div class="staff-list-main">
@@ -197,7 +204,7 @@
 				 if($PositionList):
 					foreach($PositionList as $Position):
 				 ?>
-				 <div class="col-md-4 col-sm-6 col-xs-6">
+				 <div class="col-md-4">
 					 <div class="emp-name edit_position_name_list">
 						 <label class="<?php echo (in_array($Position['id'],$position_ids))?'checked':'';?>"> <input name="position_ids[]" type="checkbox" value="<?php echo $Position['id'];?>" <?php echo (in_array($Position['id'],$position_ids))?'checked=""':'';?> /><?php echo $Position['position_name'];?></label>
 					 </div>
@@ -207,7 +214,13 @@
 			 </div>
 			</div>
 		</div>
+		 
 	 </div>
+	 <div class="m-t-20 col-md-12">
+			    <?php if($inputData['status']==2):?><button type="submit"  id="submit_users" class="btn btn-success waves-effect waves-light">Update & Send Invitation</button>
+				<?php else: ?><button type="submit"  id="submit_users" class="btn btn-success waves-effect waves-light">Update</button><?php endif;?>
+			</div>
+			
 </div>
 <div class="tab-pane" id="editl4">
 	<div class="staff-list-main">
@@ -231,7 +244,7 @@
 					</ul> 
 					<div class="tab-content" style="padding: 30px 15px;"> 
 						<div class="tab-pane active custom-tab-style" id="editWages21"> 
-						    <p><span><strong>Standard Rate:</strong> $ <button type="button" class="editable editable-click addButton" ><?php echo (!empty($wages['standard_rate']))?$wages['standard_rate']:'Set Rate'; ?></button><span class='TextBoxesGroup' style="display:none;">{!! Form::text('standard_rate',@$wages['standard_rate'],array('class'=>'form-control-custom','placeholder'=>'Standard Rate/per hour','onkeypress'=>'return isNumber(event)')) !!}   </span> <span class="removeButton" style="display:none">
+						    <p><span><strong>Standard Rate:</strong> </span>$ <button type="button" class="editable editable-click addButton" ><?php echo (!empty($wages['standard_rate']))?$wages['standard_rate']:'Set Rate'; ?></button><span class='TextBoxesGroup' style="display:none;">{!! Form::text('standard_rate',@$wages['standard_rate'],array('class'=>'form-control-custom','placeholder'=>'Standard Rate/per hour','onkeypress'=>'return isNumber(event)')) !!}   </span> <span class="removeButton" style="display:none">
 						  
 							  <input type='button' value='Remove' class="btn btn-danger " style="padding: 4px 12px;">
 							  </span> </p>
@@ -247,9 +260,14 @@
 							<p><span><strong>Overtime Rate:</strong> </span>$ <button type="button" class="editable editable-click addButton" ><?php echo (!empty($wages['overtime_rate']))?$wages['overtime_rate']:'Set Rate'; ?></button><span class='TextBoxesGroup' style="display:none;"> {!! Form::text('overtime_rate',@$wages['overtime_rate'],array('class'=>'form-control-custom','placeholder'=>'Overtime Rate/per hour','onkeypress'=>'return isNumber(event)')) !!} </span> <span class="removeButton" style="display:none">
 							  <input type='button' value='Remove' class="btn btn-danger" style="padding: 4px 12px;">
 							  </span> </p>
-						</div> 
+						</div>
+						 <div class="tab-pane  custom-tab-style" id="editWages33">
+                        <p><span><strong>Monthly Rate:</strong> </span>$ <button type="button" class="editable editable-click addButton" ><?php echo (!empty($wages['monthly_rate']))?$wages['monthly_rate']:'Set Rate'; ?></button><span class='TextBoxesGroup' style="display:none;"> {!! Form::text('monthly_rate',@$wages['monthly_rate'],array('class'=>'form-control-custom','placeholder'=>'Monthly Rate/per annum','onkeypress'=>'return isNumber(event)')) !!} </span> <span class="removeButton" style="display:none">
+                          <input type='button' value='Remove' class="btn btn-danger " style="padding: 4px 12px;">
+                          </span>  </p>
+                      </div> 
 						<div class="tab-pane" id="editWages22">
-						   <p><strong>Yearly Rate:</strong> </span>$ <button type="button" class="editable editable-click addButton" ><?php echo (!empty($wages['yearly_rate']))?$wages['yearly_rate']:'Set Rate'; ?></button><span class='TextBoxesGroup' style="display:none;"> {!! Form::text('yearly_rate',@$wages['yearly_rate'],array('class'=>'form-control-custom','placeholder'=>'Yearly Rate/per annum','onkeypress'=>'return isNumber(event)')) !!} </span> <span class="removeButton" style="display:none">
+						   <p><span><strong>Yearly Rate:</strong> </span>$ <button type="button" class="editable editable-click addButton" ><?php echo (!empty($wages['yearly_rate']))?$wages['yearly_rate']:'Set Rate'; ?></button><span class='TextBoxesGroup' style="display:none;"> {!! Form::text('yearly_rate',@$wages['yearly_rate'],array('class'=>'form-control-custom','placeholder'=>'Yearly Rate/per annum','onkeypress'=>'return isNumber(event)')) !!} </span> <span class="removeButton" style="display:none">
                           <input type='button' value='Remove' class="btn btn-danger " style="padding: 4px 12px;">
                           </span>  </p>
 						</div>  
@@ -267,4 +285,4 @@
 </div>
 
 {!! Form::close() !!}
-<?php endif;?>
+<?php endif;die;?>

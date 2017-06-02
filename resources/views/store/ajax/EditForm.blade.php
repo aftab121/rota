@@ -6,15 +6,15 @@
 			{!! Form::open(array('url' => '#','id'=>'editPositionForm','class'=>'form-horizontal m-t-20')) !!} 
 				<ul class="nav nav-tabs">
 				  <li class="active"> <a href="#editl1" data-toggle="tab" aria-expanded="false"> <span class="visible-xs"><i class="fa fa-cube" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-cube" aria-hidden="true"></i> Location Details</span> </a> </li>
-				  <li > <a href="#editl2" data-toggle="tab" aria-expanded="true"> <span class="visible-xs"><i class="fa fa-map-marker" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-map-marker" aria-hidden="true"></i> Positions for <?php echo @$Location['location_name']; ?> </span> </a> </li>
-				  <li class=""> <a href="#editl3" data-toggle="tab" aria-expanded="false"> <span class="visible-xs"><i class="fa fa-location-arrow" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-location-arrow" aria-hidden="true"></i>Employees at <?php echo @$Location['location_name']; ?></span> </a> </li>
+				  <li > <a href="#editl2" data-toggle="tab" aria-expanded="true"> <span class="visible-xs"><i class="fa fa-location-arrow" aria-hidden="true"></i></span> <span class="hidden-xs"><i class="fa fa-map-marker" aria-hidden="true"></i> Positions for <?php echo @$Location['location_name']; ?> </span> </a> </li>
+				  <li class=""> <a href="#editl3" data-toggle="tab" aria-expanded="false"> <i class="fa fa-users" aria-hidden="true"></i> <span class="visible-xs"><i class="fa fa-users" aria-hidden="true"></i></span> <span class="hidden-xs">Employees at <?php echo @$Location['location_name']; ?></span> </a> </li>
 				</ul>
 					<div class="tab-content clearfix">
 					  {!! Form::hidden('id',@$Location['location_id'],array('class'=>'form-control','placeholder'=>'Hidden Id')) !!}
 					  <div class="box-header with-border" id="editsuccess"></div>
 					  <div class="box-header with-border" id="editfailure"></div>
 					  <div class="tab-pane active" id="editl1">
-										   
+										   <div class="row">
 											<div class="col-sm-6">
 									  <div class="form-group">
 										<label for="location-name" class="control-label">Location name</label>
@@ -117,10 +117,12 @@
 										   
 									   </div>
 									</div>
-									
-								  
+									<div class="m-t-20 col-md-12">
+									   <button type="submit" class="btn btn-success waves-effect waves-light">Update</button>
+									 </div>
+								  </div>  
 										  </div>
-										  <div class="tab-pane" id="editl2">
+					  <div class="tab-pane" id="editl2">
 					   <div class="positions-tab">
 						   <h4>Select the Positions that have the <?php echo @$Location['location_name']; ?>:</h4>
 							<div>
@@ -146,6 +148,9 @@
 								</div>
 							 </div>
 					   </div>
+							<div class="m-t-20 col-md-12">
+							   <button type="submit" class="btn btn-success waves-effect waves-light">Update</button>
+							 </div>
 					  </div>
 					  <div class="tab-pane" id="editl3">
 						 <div class="staff-list-main">

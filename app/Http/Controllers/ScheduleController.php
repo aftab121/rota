@@ -16,9 +16,8 @@ use App\SalesPerDay;
 use App\HolidayLists;
 use DB;
 class ScheduleController extends Controller {
-	
 	public function index(){
-		$var = Session::get('Users.type');//exit;
+		$var = Session::get('Users.type');
 		if(Session::has('Users') == false){
 			 return redirect('/Login');
 		}else if($var==3){
@@ -34,7 +33,6 @@ class ScheduleController extends Controller {
 		$Locationlist = Location::where('locations.location_company_id','=',$company_id)->where('locations.status','!=',4)->get();
 		return view('schedule/index1')->with('Locationlist',$Locationlist->toArray())->with('Stafflist',$Stafflist->toArray())->with('Positionlist',$Positionlist->toArray());
 	}
-	
 	public function index1(){
 		$var = Session::get('Users.type');
 		if(Session::has('Users') == false){
@@ -278,8 +276,7 @@ and (   (`shift_start_time` < "'.$shift_start_time.'" AND  `shift_end_time` > "'
 					$resultset = Shift::whereIn('id',$shift_ids)->update($update);
 				}
 			}	
-			$flag = 1;
-						
+			$flag = 1;	
 					}
 				}else{
 					if($shift = Shift::create($userData)){ 
@@ -574,7 +571,6 @@ and (   (`shift_start_time` < "'.$shift_start_time.'" AND  `shift_end_time` > "'
 			return json_encode($response);exit;
 		}
 	}
-
 	public function DeleteShift(){
 		$response = array();
 		$inputData = array();
@@ -666,5 +662,4 @@ and (   (`shift_start_time` < "'.$shift_start_time.'" AND  `shift_end_time` > "'
 			return json_encode($response);exit;
 		}
 	}
-
 }

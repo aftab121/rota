@@ -100,7 +100,6 @@ input:checked + .slider:before {
 	width:115px;
 	display:inline-block;
 	height:26px;
-	border-radius:0px;
 	padding:2px 8px !important;
 }
 .fixtable
@@ -109,7 +108,7 @@ input:checked + .slider:before {
 }
 .custom-padding
 {
-	padding:5px 2px !important;
+	padding:5px 8px !important;
 }
 .modal-open {
     overflow: auto;
@@ -118,10 +117,10 @@ input:checked + .slider:before {
 </style>
 <div class="card-box m-t-10" >
   <?php //print_r($PositionLists);exit; ?>
-  <input type="hidden" name="unpublished_count" id="unpublished_count" value="<?php echo $unpublished_count ?>" />
+  <input type="hidden" name="unpublished_count" id="unpublished_count" value="<?php echo $unpublished_count; ?>" />
    <input id="shift_currentweekStart" name="shift_currentweekStart" type="hidden" value="<?php echo date('Y-m-d',strtotime($start_date));?>" class="form-control" >
 				
-	<div class="calender-table">
+	<div style="max-height:334px;min-height: 334px;overflow-y:auto;height:auto;">
 	<table class="table table-striped table-head tableid" >
 	<thead>
       <?php
@@ -149,7 +148,7 @@ input:checked + .slider:before {
         <?php } ?>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="tbody">
 	  <!-- For Unassigned Shift -->
 	  <?php 
 	  if(!empty(@$unassignedshifts)){?>
@@ -158,31 +157,35 @@ input:checked + .slider:before {
 					  $total_hrs = 0;
 		for($i=0;$i<=6;$i++){ 
 				      $current_date = date('Y-m-d',strtotime('+'.$i.' days',strtotime($start_date)));
+			
 				   ?>
         <td ><span>
           <?php 
 			foreach($unassignedshifts as $shift):
-			if((strtotime($shift['shift_date'])==strtotime($current_date))){
+			//echo "<pre>";
+			//print_r($shift);exit;
+			if(strtotime($shift['shift_date'])==strtotime($current_date)){
 				
 		  ?>
           <div class="time-div clearfix" style="<?php echo ($shift['status']==1)?'background-color: rgba(95, 190, 170, 0.3);border-color: rgba(95, 190, 170, 0.4);color: #44A692;':'';?>"> <span class="pull-left"><?php echo date('h:i A',strtotime($shift['shift_start_time'])).' - '.date('h:i A',strtotime($shift['shift_end_time'])); ?></span><br>
             <span class="pull-left"><?php echo $shift['position_name']; ?></span>
             <?php if($shift['status']!=1){?>
-            <span class="pull-right icns"> <a href="#" class="copy_shift_model" data-toggle="modal" data-position_name = "<?php echo $shift['position_name']; ?>" data-shift_start_time ="<?php echo date('h:i A',strtotime($shift['shift_start_time'])) ?>" data-shift_end_time ="<?php echo date('h:i A',strtotime($shift['shift_end_time'])); ?>" data-meal_break ="<?php echo $shift['meal_break']; ?>" data-shift_id ="<?php echo $shift['id']; ?>"  data-target="#mycopyModal"><i class="fa fa-floppy-o" aria-hidden="true"></i></a><a href="#" class="EditmodelUserShow" data-toggle="modal"  data-shift_id = "<?php echo $shift['id']; ?>" data-shift_end_time = "<?php echo date('h:i A',strtotime($shift['shift_end_time'])); ?>" data-shift_start_time = "<?php echo date('h:i A',strtotime($shift['shift_start_time'])); ?>"  data-user_id="<?php echo $User['id']; ?>"  data-target="#myEditModal"><i class="icon-pencil icons" style ="color:green;"></i></a> <a href="#" class="deletemodelUserShow" data-shift_id = "<?php echo $shift['id']; ?>"><i class="icon-close icons" style = "color:red;"></i></a> </span>
+            <span class="pull-right icns"> <a href="#" class="copy_shift_model" data-toggle="modal" data-position_name = "<?php echo $shift['position_name']; ?>" data-shift_start_time ="<?php echo date('h:i A',strtotime($shift['shift_start_time'])) ?>" data-shift_end_time ="<?php echo date('h:i A',strtotime($shift['shift_end_time'])); ?>" data-meal_break ="<?php echo $shift['meal_break']; ?>" data-shift_id ="<?php echo $shift['id']; ?>"  data-target="#mycopyModal"><i class="fa fa-floppy-o" aria-hidden="true"></i></a><a href="#" class="EditmodelUserShow" data-toggle="modal"  data-shift_id = "<?php echo $shift['id']; ?>" data-shift_end_time = "<?php echo date('h:i A',strtotime($shift['shift_end_time'])); ?>" data-shift_start_time = "<?php echo date('h:i A',strtotime($shift['shift_start_time'])); ?>"  data-user_id="<?php echo $shift['assigned_to']; ?>"  data-target="#myEditModal"><i class="icon-pencil icons" style ="color:green;"></i></a> <a href="#" class="deletemodelUserShow" data-shift_id = "<?php echo $shift['id']; ?>"><i class="icon-close icons" style = "color:red;"></i></a> </span>
             <?php }?>
-            <?php if($shift['is_conflict']==1){?>
+            <?php if($shift['is_conflict']==1){  ?>
             <div class="tooltip"  style="float:right;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 13px;color: #ffb507;"></i> <span class="tooltiptext">Conflict shift </span> </div>
             <?php } ?>
           </div>
           <?php  }
 			endforeach;?>
+			</span></td>
           <?php } ?>
       </tr>
       <tr class="tr_even">
         <td colspan="7"><b style="float:left;">Unassigned</b><b style="float:right;"></b></td>
       </tr>
 	 <?php 
-	  }?>
+	  } ?>
 	  <!-- For Unassigned Shift -->
       <?php $firstday_labour_cost = 0;
 			$firstday_total_hrs = 0;
@@ -198,6 +201,7 @@ input:checked + .slider:before {
 			$sixthday_total_hrs = 0;
 			$seventhday_labour_cost = 0;
 			$seventhday_total_hrs = 0;
+		
 	  if(!empty(@$UserLists)){
 		foreach($UserLists as $User):?>
       <tr class="tr_odd">
@@ -262,7 +266,7 @@ input:checked + .slider:before {
           <div class="time-div clearfix" style="<?php echo ($shift['status']==1)?'background-color: rgba(95, 190, 170, 0.3);border-color: rgba(95, 190, 170, 0.4);color: #44A692;':'';?>"> <span class="pull-left"><?php echo date('h:i A',strtotime($shift['shift_start_time'])).' - '.date('h:i A',strtotime($shift['shift_end_time'])); ?></span><br>
             <span class="pull-left"><?php echo $shift['position_name']; ?></span>
             <?php if($shift['status']!=1){?>
-            <span class="pull-right icns"> <a href="#" class="copy_shift_model" data-toggle="modal" data-position_name = "<?php echo $shift['position_name']; ?>" data-shift_start_time ="<?php echo date('h:i A',strtotime($shift['shift_start_time'])) ?>" data-shift_end_time ="<?php echo date('h:i A',strtotime($shift['shift_end_time'])); ?>" data-meal_break ="<?php echo $shift['meal_break']; ?>" data-shift_id ="<?php echo $shift['id']; ?>"  data-target="#mycopyModal"><i class="fa fa-floppy-o" aria-hidden="true"></i></a><a href="#" class="EditmodelUserShow" data-toggle="modal"  data-shift_id = "<?php echo $shift['id']; ?>" data-shift_end_time = "<?php echo date('h:i A',strtotime($shift['shift_end_time'])); ?>" data-shift_start_time = "<?php echo date('h:i A',strtotime($shift['shift_start_time'])); ?>"  data-user_id="<?php echo $User['id']; ?>"  data-target="#myEditModal"><i class="icon-pencil icons" style ="color:green;"></i></a> <a href="#" class="deletemodelUserShow" data-shift_id = "<?php echo $shift['id']; ?>"><i class="icon-close icons" style = "color:red;"></i></a> </span>
+            <span class="pull-right icns"> <a href="#" class="copy_shift_model" data-toggle="modal" data-position_name = "<?php echo $shift['position_name']; ?>" data-shift_start_time ="<?php echo date('h:i A',strtotime($shift['shift_start_time'])) ?>" data-shift_end_time ="<?php echo date('h:i A',strtotime($shift['shift_end_time'])); ?>" data-meal_break ="<?php echo $shift['meal_break']; ?>" data-shift_id ="<?php echo $shift['id']; ?>"  data-target="#mycopyModal"><i class="fa fa-floppy-o" aria-hidden="true"></i></a><a href="#" class="EditmodelUserShow" data-toggle="modal"  data-shift_id = "<?php echo $shift['id']; ?>" data-shift_end_time = "<?php echo date('h:i A',strtotime($shift['shift_end_time'])); ?>" data-shift_start_time = "<?php echo date('h:i A',strtotime($shift['shift_start_time'])); ?>"  data-user_id="<?php echo $shift['assigned_to']; ?>"  data-target="#myEditModal"><i class="icon-pencil icons" style ="color:green;"></i></a> <a href="#" class="deletemodelUserShow" data-shift_id = "<?php echo $shift['id']; ?>"><i class="icon-close icons" style = "color:red;"></i></a> </span>
             <?php }?>
             <?php if($shift['is_conflict']==1){?>
             <div class="tooltip"  style="float:right;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 13px;color: #ffb507;"></i> <span class="tooltiptext">Conflict shift </span> </div>
@@ -300,8 +304,7 @@ input:checked + .slider:before {
 				      $current_date = date('Y-m-d',strtotime('+'.$i.' days',strtotime($start_date)));
 				   ?>
         <td><span>
-          <?php 
-					  if(@$Position['Shift']):
+          <?php  if(@$Position['Shift']):
 						    foreach($Position['Shift'] as $shift):
 						    if(strtotime($shift['shift_date'])==strtotime($current_date)){
 								if(strtotime($shift['shift_start_time'])!==strtotime($shift['shift_end_time'])){
@@ -390,31 +393,6 @@ input:checked + .slider:before {
   </table>
  </div>
  </div>
- <div class="budget-left res-budget budget_access" style="display:none;">
-            <div class="col-md-12">
-            Sales
-            </div>
-             <?php $show_labor_hours = Session::get('CompanyDetails.labor_hours');
-	 if($show_labor_hours==1){?><div class="col-md-12">
-            Labour Hours
-            </div>
-            <?php } $show_labor_cost = Session::get('CompanyDetails.labor_cost');
-	 if($show_labor_cost==1){?> <div class="col-md-12">
-            Labour Cost
-            </div>
-	 <?php }$show_sales_per_hour = Session::get('CompanyDetails.sales_per_hour');
-		 if($show_sales_per_hour==1){?><div class="col-md-12">
-            Sales Per Hour
-            </div>
-		 <?php } $show_labor_adjustment = Session::get('CompanyDetails.labor_adjustment');
-		 if($show_labor_adjustment==1){?> <div class="col-md-12">
-            Labour Variation *
-            </div>
-		 <?php } ?>
-            <div class="col-md-12">
-            Labour percentage *
-            </div>
-             </div>
   <div class="card-box m-t-20 sales_table" style="display:none;">
 
   <div class="bottom-table table-responsive">
@@ -429,9 +407,10 @@ input:checked + .slider:before {
 				}
 			}),'sales_price');
 		?>
-        <td class="custom-padding">$
-          <input type="number" id="sales<?php echo $i;?>" value="<?php echo  @$sales_price[0];?>"  min="0" name="sales<?php echo $i;?>" class="form-control sales"/>
-          </td>
+        <td class="custom-padding">
+        <label class="col-md-2 col-sm-2 col-xs-2">$</label>
+          <div class="col-md-10 col-sm-10 col-xs-10"><input type="number" id="sales<?php echo $i;?>" value="<?php echo  @$sales_price[0];?>"  min="0" name="sales<?php echo $i;?>" class="sales"/>
+          </div></td>
         <?php } ?>
       </tr>
 	  <?php $show_labor_hours = Session::get('CompanyDetails.labor_hours');
@@ -447,7 +426,6 @@ input:checked + .slider:before {
 	 </tr><?php } $show_labor_cost = Session::get('CompanyDetails.labor_cost');
 	 if($show_labor_cost==1){?> 
 	  <tr class="afterBudget" style="display:none;">
-	     
         <td><?php echo ' $ '.number_format(abs($firstday_labour_cost),2);?></td>
         <td><?php echo ' $ '.number_format(abs($secondday_labour_cost),2);?></td>
         <td><?php echo ' $ '.number_format(abs($thirdday_labour_cost),2);?></td>
@@ -509,11 +487,13 @@ input:checked + .slider:before {
 			}),'sales_percentage');
 		?>
         <td>
-          <span id="percentage_calculate<?php echo $i;?>"> <?php echo  @$sales_percentage[0];?> % </span></td>
+          <span id="percentage_calculate<?php echo $i;?>"> <?php echo  @$sales_percentage[0];?> % </span>
+		</td>
         <?php } ?>
       </tr><!--Sales Calculation End --></tbody>
   </table>
-  </div></div>
+  </div>
+</div>
 
 <div class="modal fade" id="mycopyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">

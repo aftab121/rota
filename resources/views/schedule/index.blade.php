@@ -17,42 +17,7 @@
     font-weight:600;
     margin: 8px 0px !important;
   }
-  .weekly-report tr td
-  {
-font-size:13px;
-text-transform: uppercase;
-border-bottom:1px solid #eee;
-padding:6px 0px;
-  }
-  .all-btns a
-  {
-   
-    
-    padding:6px 12px;
-    margin-right:2px;
-    text-transform: capitalize;
-    
-  }
-  .table-head th{
-    
-    vertical-align: middle !important;
-border-bottom: 2px solid #b7b7b7 !important;
-background: #c5c5c5;
-color: #4b4b4b;
-text-align: center;
-text-transform: uppercase;
-  }
-   .table-head td{
-  text-align: center;
-}
-
-  .table-head span a{
-    text-decoration: none;
-padding-left: 10px;
-cursor: pointer;
-color:#5fbeaa;
-font-weight:600;
-  }
+ 
   .card-box
   {
     padding:0px;
@@ -66,27 +31,6 @@ font-weight:600;
     width: 500px;
     margin: 30px auto;
 }
-.time-div
-{
-  border-radius: 0;
-border: 1px solid #eee;
-background: #f5f5f5;
-padding: 0px 3px;
-position: relative;
-display: block;
-margin: 5px 0px;
-font-size: 12px;
-}
-.custom-calendar .col-md-3 {
-    width: 20%;
-}
-.padd-15
-{
-	padding:15px 0px !important;
-}
-.custom-calendar .col-md-9 {
-    width: 80%;
-}
 .panel-custom h2
 {
 	font-size: 17px;
@@ -94,37 +38,21 @@ font-size: 12px;
     margin: 0;
     text-transform: Capitalize;
 }
-#weekDays
-{
-display:inline-block;}
-.default-tab-style
-{
-padding-left:10px !important;
-padding-right:10px !important;
-line-height:35px !important;
-}
+
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover, .tabs-vertical > li.active > a, .tabs-vertical > li.active > a:focus, .tabs-vertical > li.active > a:hover
 {
 color:#fff !important;}
 .nav.nav-tabs > li > a:hover, .nav.tabs-vertical > li > a:hover {
  color: #fff !important; 
 }
-   
-   .budget-left
-   {
-   position: absolute;
-bottom: -2px;
-background: #fff;
 
-left: 0;
-width: 230px;}
 </style>
   <div class="content-page" style="margin-left:0px;"> 
     <!-- Start content -->
     <div class="content">
       <div class="container"> 
         
-        <!-- Page-Title -->
+        <!-- Page-Title --> 
         <!--<div class="row">
           <div class="col-sm-12">
             <div class="page-header-2">
@@ -137,7 +65,7 @@ width: 230px;}
           </div>
         </div>-->
         <div class="row custom-calendar">
-          <div class="col-md-3">
+          <div class="col-md-3 col-sm-12">
             <div class="panel panel-color panel-custom">
               <div class="panel-heading">
                 <h3 style="cursor:pointer;" class="panel-title"  data-toggle="modal" data-target="#myModal1"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i> Publish & Notify</h3>
@@ -193,25 +121,13 @@ width: 230px;}
               </div>
             </div>
             <div class="budget-left">
-            <div class="col-md-12">
-            Sales
+              <div class="col-md-12"> Sales </div>
+              <div class="col-md-12"> Labour cost </div>
+              <div class="col-md-12"> Labour Hour </div>
+              <div class="col-md-12"> Sales Per Hour </div>
+              <div class="col-md-12"> Labour Variation * </div>
+              <div class="col-md-12"> Labour percentage * </div>
             </div>
-             <div class="col-md-12">
-            Labour cost
-            </div>
-             <div class="col-md-12">
-            Labour Hour
-            </div>
-            <div class="col-md-12">
-            Sales Per Hour
-            </div>
-            <div class="col-md-12">
-            Labour Variation *
-            </div>
-            <div class="col-md-12">
-            Labour percentage *
-            </div>
-             </div>
           </div>
           <!-- publish and notify modal-->
           <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -244,28 +160,28 @@ width: 230px;}
                           <div class="location-list">
                             <div class="row">
                               <div class="check-design">
-                                <div class="col-md-6">
+                                <div class="col-md-6  col-sm-12">
                                   <div class="emp-name add_staff_name_list ">
                                     <label>
                                       <input name="staff_ids[]" type="checkbox" />
                                       komal singh </label>
                                   </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-sm-12">
                                   <div class="emp-name add_staff_name_list ">
                                     <label>
                                       <input name="staff_ids[]" type="checkbox" />
                                       Hashir Faizy </label>
                                   </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-sm-12">
                                   <div class="emp-name add_staff_name_list ">
                                     <label>
                                       <input name="staff_ids[]" type="checkbox" />
                                       Afsana Saleem </label>
                                   </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-sm-12">
                                   <div class="emp-name add_staff_name_list ">
                                     <label>
                                       <input name="staff_ids[]" type="checkbox" />

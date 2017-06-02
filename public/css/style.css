@@ -1,248 +1,254 @@
-.logo-login {
-	text-align: center;
-	margin-bottom: 20px;
+
+
+.logo-login{
+	text-align:center;
+	margin-bottom:20px;
 }
-.no-pad {
-	padding: 0px !important;
+
+.no-pad{
+	padding:0px !important;
 }
-.active {
-	background-color: rgba(255, 255, 255, 0.1);
+.active {background-color: rgba(255, 255, 255, 0.1);}
+
+.clear{
+	clear:both;
 }
-.clear {
-	clear: both;
-}
+
 .staff-box {
-	border: 1px solid #ccc;
-	padding: 20px;
-	margin-bottom: 23px;
-	box-shadow: 0px 0px 2px #f2f2f2;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 23px;
+    box-shadow: 0px 0px 2px #f2f2f2;
 }
+
 .staff-box:hover {
-	border: 1px solid #5FBEAA;
+    border: 1px solid #5FBEAA;
 }
+
+
 .staff-box.active {
-	border: 1px solid #5FBEAA;
+    border: 1px solid #5FBEAA;
 }
-.staff-list {
-	margin-top: 30px;
+
+
+.staff-list{
+	margin-top:30px;
 }
+
+
 .store-list {
-	background: #FFFF;
-	height: 530px;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-	max-height: 540px;
-	overflow-y: auto;
+    background: #FFFF;
+    height: 530px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    max-height: 540px;
+    overflow-y: auto;
 	padding: 20px;
 }
-.store-list ul {
-	margin: 0px;
-	padding: 0px;
+
+
+.store-list ul{
+	margin:0px;
+	padding:0px;
 }
+
+
 .store-list ul li {
-	list-style: none;
-	background: #92E7D5;
-	margin-bottom: 11px;
-	padding: 7px 10px;
-	border-radius: 4px;
-	color: #626060;
-	cursor: pointer;
+    list-style: none;
+    background: #92E7D5;
+    margin-bottom: 11px;
+    padding: 7px 10px;
+    border-radius: 4px;
+    color: #626060;
+	cursor:pointer;
 }
-.store-list ul li a {
-	color: #626060;
+
+.store-list ul li a{
+    color: #626060;
 }
+
+
 .store-list ul li:hover {
-	background: #5FBEAA;
-	color: #fff;
+	 background: #5FBEAA;
+	 color:#fff;
 }
+
 .location-box {
-	border: 1px solid #e0e0e0;
-	padding: 11px 10px;
-	cursor: pointer;
+    border: 1px solid #e0e0e0;
+    padding: 11px 10px;
+	cursor:pointer;
 }
-.location-list {
-	margin-top: 20px;
+
+.location-list{
+	margin-top:20px;
 }
-.staff-all {
+
+.staff-all{
 	padding: 0;
 }
+
 .staff-all ul li span img {
-	border-radius: 50%;
-	width: 44px;
-	height: 45px;
-	margin-right: 10px;
+    border-radius: 50%;
+    width: 44px;
+    height: 45px;
+    margin-right: 10px;
 }
+
 .staff-all ul li {
-	background: #FFF;
-	border-bottom: 1px solid #ccc;
-	border-radius: 0;
-	padding: 10px 10px 10px;
-	margin: 0;
+    background: #FFF;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+    padding: 10px 10px 10px;
+    margin: 0;
 }
+
 .staff-photo {
-	background: #FFF;
-	padding: 10px;
-	box-shadow: 0px 0px 2px #ccc;
-	border-radius: 4px;
+    background: #FFF;
+    padding: 10px;
+    box-shadow: 0px 0px 2px #ccc;
+    border-radius: 4px;
 }
-.staff-photo img {
-	max-width: 100%;
+
+.staff-photo img{
+	max-width:100%;
 }
-img {
-	max-width: 100%;
+
+
+img{
+	max-width:100%;
 }
+
 .upload-photo {
-	margin-top: 12px;
+    margin-top: 12px;
 }
-.content-height .tab-content {
+
+
+.content-height .tab-content{
 	min-height: 481px;
 }
-.top-info i {
+
+.top-info i{
 }
+
 .top-info {
-	font-size: 21px;
-	margin-bottom: 20px;
-	color: #0F0F0F;
+    font-size: 21px;
+    margin-bottom: 20px;
+    color: #0F0F0F;
 }
-.rate .tab-content {
-	min-height: auto;
+
+
+.rate .tab-content{
+	min-height:auto;
 }
+
+
 .add-btn {
-	padding: 10px 0px;
-	text-align: right;
+    padding: 10px 0px;
+	text-align:right;
 }
+
 .form-horizontal .control-label {
-	text-align: left;
+   
+    text-align: left;
 }
+
 .search-space {
-	border-bottom: 2px solid #f2f2f2;
-	margin-bottom: 21px;
+    border-bottom: 2px solid #f2f2f2;
+    margin-bottom: 21px;
 }
-#datatable_filter {
-	text-align: right;
+
+
+#datatable_filter{
+	text-align:right;
 }
+
 .card-box {
-	padding: 15px;
-	border: 1px solid #e6e6e6 !important;
+    padding:15px;
+    border: 1px solid #e6e6e6 !important;
 }
-#datatable_length, .dataTables_filter, .dataTables_length {
-	display: none;
+
+#datatable_length, .dataTables_filter, .dataTables_length{
+	display:none;
 }
-.center-div {
+
+
+.center-div{
 	float: none;
 	margin: 0px auto;
 }
-.full-width {
-	float: left;
-	width: 100%;
+
+.full-width{
+	float:left;
+	width:100%;
 }
+
 .switch-main {
-	background: #f5f5f5;
-	padding: 10px;
-	border-radius: 3px;
-	border-bottom: 3px solid #dad8d8;
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 3px;
+    border-bottom: 3px solid #dad8d8;
 }
-.d-inline {
-	display: inline;
+
+.d-inline{
+	display:inline;
 }
-.card-gray {
+
+
+.card-gray{
 	background: #f5f5f5;
 	padding: 20px;
 	border-radius: 3px;
 	border-bottom: 3px solid #dad8d8;
 	float: left;
 	width: 100%;
-	margin-bottom: 20px;
+	margin-bottom:20px;
 }
+
 .card-header {
-	border-bottom: 2px solid #efeded;
-	padding-bottom: 18px;
+    border-bottom: 2px solid #efeded;
+    padding-bottom: 18px;
 }
+
 .card-header h4 {
-	margin: 0px;
-	position: relative;
-	top: 3px;
+    margin: 0px;
+    position: relative;
+    top:3px;
 }
+
 .emp-name label {
-	border: 1px solid #e4e4e4;
-	width: 100%;
-	padding: 10px;
+    border: 1px solid #e4e4e4;
+    width: 100%;
+    padding: 10px;
 }
-label.checked {
+
+label.checked{
 	background: #36404A;
-	position: relative;
-	color: #FFF;
+	position:relative;
+color: #FFF;
 }
-.emp-name input {
-	display: none;
+
+
+.emp-name input{
+	display:none;
 }
-label.checked:after {
+
+label.checked:after{
 	font-family: FontAwesome;
 	right: 5px;
 	position: absolute;
 	top: 10px;
 	content: "\f00c";
 }
-.shift-left {
-	margin-left: 20px;
-}
+.shift-left
+{
+margin-left:20px;}
+
 .form-horizontal .control-label {
-	padding-top: 7px;
-	margin-bottom: 8px;
+    padding-top: 7px;
+    margin-bottom: 8px;
 }
-.time-div {
-	border-radius: 0;
-	border: 1px solid #eee;
-	background: #f5f5f5;
-	padding: 0px 3px;
-	position: relative;
-	display: block;
-	margin: 5px 0px;
-	font-size: 12px;
-}
-.custom-calendar .col-md-3 {
-	width: 20%;
-	margin: 0;
-	padding: 0;
-}
-.padd-15 {
-	padding: 15px 0px !important;
-}
-.custom-calendar .col-md-9 {
-	width: 80%;
-	margin: 0;
-	padding: 0;
-}
-/**********************staff page***********************/
-.form-control-custom {
-	border: 1px solid #d4d4d4;
-	padding: 3px 8px;
-	border-radius: 3px;
-}
-.custom-tab-style strong {
-	width: 110px;
-	display: inline-block;
-}
-.TextBoxesGroup {
-	display: inline-block;
-}
-#TextBoxDiv1 {
-	display: inline-block;
-}
-#TextBoxDiv2 {
-	display: inline-block;
-}
-.contnt-tab {
-	padding: 30px 15px;
-}
-.res-padding .tab-content {
-	padding: 20px !important;
-}
-.calender-table {
-	max-height: 336px;
-	overflow-y: auto;
-	height: auto;
-	min-height: 332px;
-}
-.budget-left {
-	display: none;
-}
+
+
+
+
+
+

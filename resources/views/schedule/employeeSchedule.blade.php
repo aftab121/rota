@@ -113,7 +113,7 @@ display:inline-block;}
                     </div>
                     </a> </div>
                   <div class="media-body">
-                    <h4 class="media-heading"><b> <i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo $Shift['shift_start_time'].' - '.$Shift['shift_end_time']; ?></b></h4>
+                    <h4 class="media-heading"><b> <i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo date('H:i A',strtotime($Shift['shift_start_time'])).' - '.date('H:i A',strtotime($Shift['shift_end_time'])); ?></b></h4>
                     <p><i class="fa fa-user" aria-hidden="true"></i> <?php echo $Shift['position_name']; ?></p>
                     <p><i class="fa fa-map-marker" aria-hidden="true"></i> <?php echo $Shift['location_name']; ?></p>
                   </div>
@@ -170,7 +170,7 @@ $('body').on('click','.decWeek', function(evt){
 			var nth = current_back-1;
 				$('#weekDays').prepend('<button class="btn btn-sm btn-default selectWeek" data-id = "'+current_back+'" >'+res+'</button>');
 				$('body #weekDays button:last-child').remove();
-				$('.decWeek').attr('data-id', nth);
+				$('.decWeek').attr('data-id',nth);
 				var last = $('body .selectWeek:last-child').attr('data-id');
 				$('.incWeek').attr('data-id',parseInt(last)+1);
 				
@@ -189,7 +189,7 @@ $('body').on('click','.decWeek', function(evt){
 			success: function(res){
 				var nth = current_back+1;
 				$('#weekDays').append('<button class="btn btn-sm btn-default selectWeek" data-id = "'+current_back+'" >'+res+'</button>');
-				$('.incWeek').attr('data-id', nth);
+				$('.incWeek').attr('data-id',nth);
 				$('#weekDays button:first-child').remove();
 				var current  = $('body .selectWeek:first-child').attr('data-id');
 				$('.decWeek').attr('data-id',parseInt(current)-1);
@@ -201,6 +201,5 @@ $('body').on('click','.decWeek', function(evt){
 <!-- ============================================================== --> 
 <!-- End Right content here --> 
 <!-- ============================================================== -->
-</div>
 <!-- END wrapper --> 
 @stop 

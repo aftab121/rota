@@ -12,17 +12,34 @@ use App\Country;
 use App\Position;
 use App\Wages;
 use App\Location;
+use App\Shift;
 use App\CompanyDetails;
 use DB;
 class AccountController extends Controller {
-	 public function dashboard(){
+	public function DeleteStaff(){
+		$var = Session::get('Users.type');
+		$inputData = Input::all(); 
+		$PositionData = array();
+		$response =array();
+		if(!empty($inputData)){
+		  $PositionData['status'] = 4;
+		  $start_date = date('Y-m-d');
+		  $shiftsCount = 0;
+		  $shiftsCount = Shift::where('assigned_to','=',$inputData['user_id_todelete'])->where('shifts.status','!=',3)->where('shift_date','>=',$start_date)->get();
+		  $shiftsCount = count($shiftsCount);
+		  if($shiftsCount==0){
+			  if(User::where('id',@$inputData['user_id_todelete'])->update($PositionData)){ 
+				$response = array('Status' => 'success','message' => 'Staff deleted successfully.');
+			  }
+		  }else{
+		  		$response = array('Status' => 'success','message' => 'Staff has shifts assigned to it.It cannot be deleted.');
+		  }
+		  return json_encode($response);exit;
+		}
 		
-		return view('account/dashboard');
 	}
-
-	
     public function index(){
-		$var = Session::get('Users.type');//exit;
+		$var = Session::get('Users.type');
 		if(Session::has('Users') == false){
 			 return redirect('/Login');
 		}else if($var==3){
@@ -30,15 +47,12 @@ class AccountController extends Controller {
 		}
 		return view('account/index');
 	}
-	
 	public function HolidayEditForm(){
-		
 		$inputData = Input::all(); 
 		$HolidayData = array();
 		if(!empty($inputData)){
 			$user_id = Session::get('Users.id');
 			$search = array('company_id'=>Session::get('Users.company_id'),'id'=>$inputData['holiday_id']);
-			
 			$HolidayData = HolidayLists::where($search)->first();
 		}
 		$countries = Country::lists('country_name','country_id');
@@ -64,7 +78,6 @@ class AccountController extends Controller {
 		  }
 		  return json_encode($response);exit;
 		}
-		
 	}
 	public function HolidaySearch(){
 		$inputData = Input::all(); 
@@ -106,9 +119,8 @@ class AccountController extends Controller {
 		}
 		return view('home/ajaxStaff/ajaxStaffList')->with('Userlists',$Users->toArray());
 	}
-	
 	public function EditStaff(){
-		$var = Session::get('Users.type');//exit;
+		$var = Session::get('Users.type');
 		if(Session::has('Users') == false){
 			 return redirect('/Login');
 		}else if($var==3){
@@ -120,7 +132,7 @@ class AccountController extends Controller {
 		$id = @$inputData['hidden_id'];
 		if(!empty($inputData)){
 			$Users = User::find($id);
-			$email_id=@$inputData['email'];
+			$email_id= @$inputData['email'];
 			$userData = array(
 			  'firstname' => @$inputData['firstname'],
 			  'lastname'  => @$inputData['lastname'],
@@ -151,10 +163,11 @@ class AccountController extends Controller {
 				'profile_pic' => 'mimes:jpeg,jpg,png,gif|max:10000',
 				'emergency_contact'=>  'required',
 				'emergency_number'=>  'required',
-				'type' => 'required',
-				'location_ids' =>'required',
-				'position_ids' =>'required',
+				'type' => 'required'
+				
 			);
+			//'location_ids' =>'required',
+				//'position_ids' =>'required',
 			$messages = array('start_date_with_company.required'=>'Please choose Joining Date.','type.required'=>'Please choose access permission.','location_ids.required'=>'Please select atleast one location.','position_ids.required'=>'Please select atleast one position.');
 			$validator = Validator::make($userData,$rules,$messages);
 			if($validator->fails()){
@@ -163,10 +176,7 @@ class AccountController extends Controller {
 					$erMsg = $error[0];
 					break;
 				}
-				$response =array(
-						  'Status' => 'danger',
-						  'message' => $erMsg
-						);
+				$response =array( 'Status' => 'danger', 'message' => $erMsg );
 			}	
 			else {
 				 //save to DB user details
@@ -199,28 +209,39 @@ class AccountController extends Controller {
 				}
 				$userData['type'] = (Session::get('Users.type')==1)?$userData['type']:$Users['type'];
 				$userData['email'] = (Session::get('Users.type')==1)?$userData['email']:$Users['email'];
+					
 			  if(User::where('id', $id)->update($userData)){ 
 			        $wages = array();
 					$wagesList = Wages::where('wage_user_id', $id)->first();
+				    
 					if(!empty($wagesList))
 					{
-						$wages['standard_rate'] = $inputData['standard_rate'];
-						$wages['saturday_rate'] = $inputData['saturday_rate'];
-						$wages['sunday_rate'] = $inputData['sunday_rate'];
-						$wages['overtime_rate'] = $inputData['overtime_rate'];
-						$wages['holiday_rate'] = $inputData['holiday_rate'];
-						$wages['yearly_rate'] = $inputData['yearly_rate'];
+						
+						$wages['standard_rate'] =  ((@$inputData['monthly_rate']!='')||(@$inputData['yearly_rate']!=""))?'':@$inputData['standard_rate'];
+						
+						$wages['saturday_rate'] = ((@$inputData['monthly_rate']!='')||(@$inputData['yearly_rate']!=""))?'':@$inputData['saturday_rate'];
+						
+						$wages['sunday_rate'] = ((@$inputData['monthly_rate']!='')||(@$inputData['yearly_rate']!=""))?'':@$inputData['sunday_rate'];
+						
+					$wages['overtime_rate'] =((@$inputData['monthly_rate']!='')||(@$inputData['yearly_rate']!=""))?'':@$inputData['overtime_rate'];
+							$wages['holiday_rate'] = ((@$inputData['monthly_rate']!='')||(@$inputData['yearly_rate']!=""))?'':@$inputData['holiday_rate'];
+						$wages['monthly_rate'] = (@$inputData['yearly_rate']!="")?'':@$inputData['monthly_rate'];
+						$wages['yearly_rate'] = @$inputData['yearly_rate'];
+						
 						Wages::where('wage_user_id', $id)->update($wages);
+						
 					}else{
 						$wages['wage_user_id'] = $id;
-						$wages['standard_rate'] = $inputData['standard_rate'];
-						$wages['saturday_rate'] = $inputData['saturday_rate'];
-						$wages['sunday_rate'] = $inputData['sunday_rate'];
-						$wages['overtime_rate'] = $inputData['overtime_rate'];
-						$wages['holiday_rate'] = $inputData['holiday_rate'];
-						$wages['yearly_rate'] = $inputData['yearly_rate'];
+						$wages['standard_rate'] = ((@$inputData['monthly_rate']!='')||(@$inputData['yearly_rate']!=""))?'':@$inputData['standard_rate'];
+						$wages['saturday_rate'] = ((@$inputData['monthly_rate']!='')||(@$inputData['yearly_rate']!=""))?'':@$inputData['saturday_rate'];
+						$wages['sunday_rate'] = ((@$inputData['monthly_rate']!='')||(@$inputData['yearly_rate']!=""))?'':@$inputData['sunday_rate'];
+						$wages['overtime_rate'] = ((@$inputData['monthly_rate']!='')||(@$inputData['yearly_rate']!=""))?'':@$inputData['overtime_rate'];
+						$wages['holiday_rate'] = ((@$inputData['monthly_rate']!='')||(@$inputData['yearly_rate']!=""))?'':@$inputData['holiday_rate'];
+						$wages['monthly_rate'] = (@$inputData['yearly_rate']!="")?'':@$inputData['monthly_rate'];
+						$wages['yearly_rate'] = @$inputData['yearly_rate'];
 						Wages::create($wages);
 					}
+				 // print_r('dsfdsfds');die;
 					$img = ($userData['profile_pic'])?('profile/'.$userData['profile_pic']):'noimage.png';
 					$li = "<span><img src='".asset('images/'.$img)."' ></span>".$userData['firstname'].' '.$userData['lastname'];
 					$image_path= asset('images/'.$img);
@@ -239,7 +260,7 @@ class AccountController extends Controller {
 		}
 	} 
 	public function addStaff(){
-		$var = Session::get('Users.type');//exit;
+		$var = Session::get('Users.type');
 		if(Session::has('Users') == false){
 			 return redirect('/Login');
 		}else if($var==3){
@@ -265,7 +286,7 @@ class AccountController extends Controller {
 			  'position_ids' => @$inputData['position_ids'],
 			  'location_ids' => @$inputData['location_ids'],
 			  'start_date_with_company' => @$inputData['start_date_with_company'],
-			  'notes'=> @$inputData['notes'],
+			  'notes'=> @$inputData['notes']
 			);
 			$rules = array(
 				'firstname'=> 'required',
@@ -279,11 +300,13 @@ class AccountController extends Controller {
 				'profile_pic' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
 				'emergency_contact'=>  'required',
 				'emergency_number'=>  'required',
-				'type' => 'required',
-				'location_ids' =>'required',
-				'position_ids' =>'required',
+				'type' => 'required'
+				
 			);
-			$messages = array('start_date_with_company.required'=>'Please choose Joining Date.','type.required'=>'Please choose access permission.','location_ids.required'=>'Please select atleast one location.','position_ids.required'=>'Please select atleast one position.');
+			//'location_ids' =>'required',
+				//'position_ids' =>'required'
+			$messages = array('start_date_with_company.required'=>'Please choose Joining Date.','type.required'=>'Please choose access permission.','location_ids.required'=>'Please select atleast one location.','position_ids.required'=>'Please select 
+			atleast one position.');
 			$validator = Validator::make($userData,$rules,$messages);
 			if($validator->fails()){
 				$errors = $validator->getMessageBag()->toArray();
@@ -291,16 +314,13 @@ class AccountController extends Controller {
 					$erMsg = $error[0];
 					break;
 				}
-				$response =array(
-						  'Status' => 'danger',
-						  'message' => $erMsg
-						);
+				$response =array( 'Status' => 'danger','message' => $erMsg);
 			}	
 			else {
 				 //save to DB user details
 				$destinationPath = '';
 				$filename        = '';
-				if (Input::hasFile('profile_pic') ) {
+				if (Input::hasFile('profile_pic')) {
 					$file            = Input::file('profile_pic');
 					$destinationPath = public_path().'/images/profile';
 					$filename        = time() . '_' . $file->getClientOriginalName();
@@ -308,30 +328,39 @@ class AccountController extends Controller {
 					$uploadSuccess   = $file->move($destinationPath, $filename);
 					$userData['profile_pic'] = $filename;
 				}
+				
 				$pass = url('/ResetPassword').'/'.bin2hex('test'. base64_encode(str_replace('.','',uniqid('',true) )));
 				$userData['dob'] = date('Y-m-d',strtotime(@$inputData['dob']));
 				$userData['status'] = 2;
 				$userData['created_by'] = Session::get('Users.id');
 				$userData['company_id'] = Session::get('CompanyDetails.id');
 				$userData['password_link'] = $pass;
-				$userData['position_ids'] = implode(',',@$userData['position_ids']);
-				$userData['location_ids'] = implode(',',@$userData['location_ids']);
+				$userData['position_ids'] = (!empty(@$userData['position_ids']))?implode(',',@$userData['position_ids']):'';
+				$userData['location_ids'] = (!empty(@$userData['location_ids']))?implode(',',@$userData['location_ids']):'';
 				$userData['type'] = (Session::get('Users.type')==1)?$userData['type']:3;
 			  if($user = User::create($userData)){ 
 				$wages = array();
-				$last_id =$user->id ;
+				$last_id =$user->id;
+				  
 				$wages['wage_user_id'] = $last_id;
-				$wages['standard_rate'] = $inputData['standard_rate'];
-				$wages['saturday_rate'] = $inputData['saturday_rate'];
-				$wages['sunday_rate'] = $inputData['sunday_rate'];
-				$wages['overtime_rate'] = $inputData['overtime_rate'];
-				$wages['holiday_rate'] = $inputData['holiday_rate'];
-				$wages['yearly_rate'] = $inputData['yearly_rate'];
+			
+				$wages['standard_rate'] = ((@$inputData['monthly_rate']!='')&&(@$inputData['yearly_rate']!=""))?'':@$inputData['standard_rate'];
+				$wages['saturday_rate'] = ((@$inputData['monthly_rate']!='')&&(@$inputData['yearly_rate']!=""))?'':@$inputData['saturday_rate'];
+				$wages['sunday_rate'] = ((@$inputData['monthly_rate']!='')&&(@$inputData['yearly_rate']!=""))?'':@$inputData['sunday_rate'];
+				$wages['overtime_rate'] = ((@$inputData['monthly_rate']!='')&&(@$inputData['yearly_rate']!=""))?'':@$inputData['overtime_rate'];
+				$wages['holiday_rate'] = ((@$inputData['monthly_rate']!='')&&(@$inputData['yearly_rate']!=""))?'':@$inputData['holiday_rate'];
+				$wages['monthly_rate'] = (@$inputData['yearly_rate']!="")?'':@$inputData['monthly_rate'];
+				$wages['yearly_rate'] = @$inputData['yearly_rate'];
+				  
 				Wages::create($wages);
 			    // Mail Send : Starts Here 
 				$emailLink = @$pass;
+				$firstname =  $user['firstname'];
+				$lastname =  $user['lastname'];
 				$img = ($user['profile_pic'])?('profile/'.$userData['profile_pic']):'noimage.png';
-				$li = "<li data-id =".$user->id." class='liclick'><span><img src='".asset('images/'.$img)."' ></span>".$user['firstname'].' '.$user['lastname']."</li>";
+				$li ='<li data-id ="'.$user->id.'" class="liStaffDiv'.$user->id.' checked"><span class="liStaffNameDiv'.$user->id.'"><span><img src="'.asset('images/'.$img).'"></span>'.$firstname.' '.$lastname.'</span><span style="float:right"><a href="#" data-id ="'.$user->id.'" class="liclick liclick_'.$user->id.'"><i class="icon-pencil icons" style="color:green;" title="Edit"></i></a>&nbsp;&nbsp;<a href="#" class="deletemodelStaffShow"  data-toggle="modal"  data-target="#deleteStaffModal" data-user_id="'.$user->id.'" title="Delete"><i class="icon-close icons" style="color:red;" ></i></a></span> </li>';
+                   
+                   //<li data-id =".$user->id." class='liclick'><span><img src='".asset('images/'.$img)."' ></span>".$user['firstname'].' '.$user['lastname']."</li>";
 				$emailBody = '';
 				Mail::send('email.resetPassword', array('emailBody' => $emailBody, 'emailLink' => $emailLink),function($message){
 					$message->to(Input::get('email'),'ROTA Support')->subject('ROTA Support - Reset password link.');
@@ -348,8 +377,6 @@ class AccountController extends Controller {
 				    'message' => 'Something went wrong.Please try again later.'
 			    );
 			  }
-			  
-				
 			}
 			return json_encode($response);exit;
 		}
@@ -397,11 +424,8 @@ class AccountController extends Controller {
 				$userData['holiday_list_user_id'] = Session::get('Users.id');
 				$userData['company_id'] = Session::get('CompanyDetails.id');
 			    if(HolidayLists::create($userData)){ 
-				$response =array(
-					'Status' => 'success',
-				    'message' => 'Holiday added successfully.'
-			    );
-			  }
+					$response =array('Status' => 'success','message' => 'Holiday added successfully.');
+			    }
 			}
 			return json_encode($response);exit;
 		}
@@ -420,11 +444,10 @@ class AccountController extends Controller {
 		if(!empty($inputData)){
 			
 			$userData = array(
-			
 			  'country_id' => @$inputData['country_id'],
 			  'holiday_name' => @$inputData['holiday_name'],
 			  'holiday_date' => @$inputData['holiday_date'],
-			  'year'=> @$inputData['year'],
+			  'year' => @$inputData['year'],
 			);
 			$rules = array(
 				'country_id' => 'required',
@@ -440,11 +463,7 @@ class AccountController extends Controller {
 					$erMsg = $error[0];
 					break;
 				}
-				$response =array(
-				
-						  'Status' => 'danger',
-						  'message' => $erMsg
-						);
+				$response =array( 'Status' => 'danger','message' => $erMsg);
 			}	
 			else {
 				

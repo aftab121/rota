@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -10,18 +10,18 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Validator::extend('check_current_password', function($field,$value,$parameters){
- //return true if field value is foo
- if(md5($value) === Session::get('Users.password')){
-	 return true;
- }
- return false;
- 
-});
+// Validator::extend('check_current_password', function($field,$value,$parameters){
+//  //return true if field value is foo
+//  if(md5($value) === Session::get('Users.password')){
+// 	 return true;
+//  }
+//  return false;
+// });
 Route::group(['middleware' => ['web']], function () {
 
 	Route::match(['get', 'post'],'/','HomeController@login');
 	Route::match(['get', 'post'],'/Company','HomeController@company');
+    Route::match(['get', 'post'],'/Company1','HomeController@company1');
 	Route::match(['get', 'post'],'/ForgetPassword','HomeController@forgetPassword');
 	Route::match(['get', 'post'],'/ResetPassword/{string}','HomeController@ResetPassword');
 	Route::match(['get', 'post'],'/changePassword','HomeController@changePassword');
@@ -42,6 +42,8 @@ Route::group(['middleware' => ['web']], function () {
 	Route::post('/addStaffReminder','StaffReminderController@addStaffReminder');
 	Route::post('/StaffReminder','StaffReminderController@StaffReminder');
 	Route::post('/StaffSearch','AccountController@StaffSearch');
+	Route::match(['get', 'post'],'/EditStaff','AccountController@EditStaff');
+	Route::match(['get', 'post'],'Staff/DeleteStaff','AccountController@DeleteStaff');
 	// Ends : For Staff DateReminder
 	// For Date 
 	Route::post('/decWeek','DateFormatController@decWeek');
@@ -55,11 +57,9 @@ Route::group(['middleware' => ['web']], function () {
 	Route::post('/DeleteWeekShifts','DateFormatController@DeleteWeekShifts');
 	Route::post('/ShowWeek','DateFormatController@ShowWeek');
 	Route::post('/CopyWeekOption','DateFormatController@CopyWeekOption');
-	
 	Route::post('/PublishOption','DateFormatController@PublishOption');
 	// Ends : Date 
 	// For Employee 
-	
 	Route::match(['get', 'post'],'/Employee','EmployeeController@index');
 	//Ends Here For Employee
 	// Starts : For Store 
@@ -67,29 +67,33 @@ Route::group(['middleware' => ['web']], function () {
 	Route::match(['get', 'post'],'Store/Search','StoreController@searchList');
 	Route::match(['get', 'post'],'Store/EditForm','StoreController@EditForm');
 	Route::match(['get', 'post'],'Store/Edit','StoreController@edit');
-	// Ends : For Store 
+	Route::match(['get', 'post'],'Store/DeleteLocation','StoreController@DeleteLocation');
+	// Ends : For Store
+		// Starts : For Reports 
+	Route::match(['get', 'post'],'/printReport','ReportController@printReport');
+	Route::match(['get', 'post'],'/Reports','ReportController@reports');
+	Route::match(['get', 'post'],'/GetData','ReportController@getData');
+	// Ends : For Reports
 	Route::match(['get', 'post'],'/Schedule','ScheduleController@index');
 	Route::match(['get', 'post'],'/AddShift','ScheduleController@AddShift');
 	Route::match(['get', 'post'],'/EditShift','ScheduleController@EditShift');
 	Route::match(['get', 'post'],'/DeleteShift','ScheduleController@DeleteShift');
+
 	Route::match(['get', 'post'],'/WeeklyReport','DateFormatController@WeeklyReport');
-	
+	Route::match(['get', 'post'],'/WeeklyTarget','DateFormatController@WeeklyTarget');
 	Route::match(['get', 'post'],'/Schedule1','ScheduleController@index1');
-	Route::match(['get', 'post'],'/Reports','HomeController@reports');
-	Route::match(['get', 'post'],'/Reports1','HomeController@reports1');
+	
 	Route::match(['get', 'post'],'/publishShift','ScheduleController@publishShift');
 	Route::match(['get', 'post'],'/publishShift','ScheduleController@publishShift');
 	Route::match(['get', 'post'],'/addNotesByDate','ScheduleController@addNotesByDate');
 	Route::match(['get', 'post'],'/employeeSchedule','EmployeeController@employeeSchedule');
-	
 	// Starts : For Position 
-	
 	Route::match(['get', 'post'],'Position/Search','PositionController@searchList');
 	Route::match(['get', 'post'],'/Position','PositionController@index');
 	Route::match(['get', 'post'],'/Position/EditForm','PositionController@EditForm');
 	Route::match(['get', 'post'],'/Position/Edit','PositionController@edit');
+	Route::match(['get', 'post'],'/DeletePositions','PositionController@DeletePositions');
 	// Ends : For Position
-	Route::match(['get', 'post'],'/EditStaff','AccountController@EditStaff');
 	Route::match(['get', 'post'],'/Login','HomeController@login');
 	Route::match(['get', 'post'],'/Login/{string}','HomeController@login');
 	Route::match(['get', 'post'],'/Register','HomeController@register');
@@ -129,7 +133,7 @@ Route::group(['middleware' => ['web']], function () {
 	/**********************Admin Ends****************************/
 	// For Logout
 	Route::get('/admin/Logout', function() {
-	 		Session::forget('Admin');
+	 		Session::destroy('Admin');
 			return redirect('/admin');
 	});
 });

@@ -10,6 +10,7 @@ use App\Position;
 use App\Country;
 use App\CompanyDetails;
 use App\Location;
+use App\Shift;
 use DB;
 class StoreController extends Controller {
 	
@@ -79,7 +80,7 @@ class StoreController extends Controller {
 			$rules = array(
 				'location_name' => 'required',
 			);
-			$messages = array('location_name.required'=>'The Location name is required.','position_ids.required'=>'Please select atleast one position.','staff_ids.required'=>'Please select atleast one staff member.');
+			$messages = array('location_name.required'=>'The Location name is required.');
 			$validator = Validator::make($userData,$rules,$messages);
 			if($validator->fails()){
 				$errors = $validator->getMessageBag()->toArray();
@@ -164,7 +165,7 @@ class StoreController extends Controller {
 				$userData['status'] = 1;
 			    if($location_id = Location::create($userData)->location_id){ 
 				$location =@$inputData['location_name'];
-				$li ='<li data-id ="'.$location_id.'" class="liclick liclick_'.$location_id.'">'.$location.'</li>';
+				$li ='<li data-id ="'.$location_id.'" class="liDiv_'.$location_id.'"><span class="liLocationNameDiv'.$location_id.'">  '.$location.'</span><span style="float:right"><a href="#" data-id ='.$location_id.'" class="liclick liclick_'.$location_id.'"><i class="icon-pencil icons" style="color:green;" title="Edit"></i></a>&nbsp;&nbsp;<a href="#" class="deletemodelLocationShow"  data-toggle="modal"  data-target="#deleteLocationModal" data-location_id="'.$location_id.'" title="Delete"><i class="icon-close icons" style="color:red;" ></i></a></span></li>';
 				$response =array(
 				    'li'=>$li,
 					'Status' => 'success',
@@ -179,5 +180,27 @@ class StoreController extends Controller {
 		$Locationlist = Location::where('locations.location_company_id','=',$company_id)->where('locations.status','!=',4)->orderBy('location_id', 'desc')->get();
 		$countries = Country::lists('country_name','country_id');
 		return view('store/index')->with('countries',$countries->toArray())->with('Locationlist',$Locationlist->toArray())->with('Stafflist',$Stafflist->toArray())->with('Positionlist',$Positionlist->toArray());
+	}
+	public function DeleteLocation(){
+		$var = Session::get('Users.type');
+		$inputData = Input::all(); 
+		$PositionData = array();
+		$response =array();
+		if(!empty($inputData)){
+		  $PositionData['status'] = 4;
+		  $start_date = date('Y-m-d');
+		  $shiftsCount = 0;
+		  $shiftsCount = Shift::where('location_id','=',$inputData['location_id_todelete'])->where('shifts.status','!=',3)->where('shift_date','>=',$start_date)->get();
+		  $shiftsCount = count($shiftsCount);
+		  if($shiftsCount==0){
+			  if(Location::where('location_id',@$inputData['location_id_todelete'])->update($PositionData)){ 
+				$response = array('Status' => 'success','message' => 'Location deleted successfully.');
+			  }
+		  }else{
+		  		$response = array('Status' => 'success','message' => 'Location has shifts assigned to it.It cannot be deleted.');
+		  }
+		  return json_encode($response);exit;
+		}
+		
 	}
 }

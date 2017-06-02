@@ -8,6 +8,7 @@ use Response;
 use App\User;
 use App\Position;
 use App\Country;
+use App\Shift;
 use App\CompanyDetails;
 use App\Location;
 use DB;
@@ -48,6 +49,28 @@ class PositionController extends Controller {
 		$Locationlist = Location::where('locations.location_company_id','=',$company_id)->where('locations.status','!=',4)->get();
 		return view('position/ajax/EditForm')->with('Position',$Position->toArray())->with('Locationlist',$Locationlist->toArray())->with('Stafflist',$Stafflist->toArray());
 	}
+	public function DeletePositions(){
+		$var = Session::get('Users.type');
+		$inputData = Input::all(); 
+		$PositionData = array();
+		$response =array();
+		if(!empty($inputData)){
+		  $PositionData['status'] = 4;
+		  $start_date = date('Y-m-d');
+		  $shiftsCount = 0;
+		  $shiftsCount = Shift::where('position_id','=',$inputData['positon_id_todelete'])->where('shifts.status','!=',3)->where('shift_date','>=',$start_date)->get();
+		  $shiftsCount = count($shiftsCount);
+		  if($shiftsCount==0){
+			  if(Position::where('id',@$inputData['positon_id_todelete'])->update($PositionData)){ 
+				$response = array('Status' => 'success','message' => 'Position deleted successfully.');
+			  }
+		  }else{
+		  		$response = array('Status' => 'success','message' => 'Position has shifts assigned to it.It cannot be deleted .');
+		  }
+		  return json_encode($response);exit;
+		}
+		
+	}
 	public function edit(){
 		$var = Session::get('Users.type');//exit;
 		if(Session::has('Users') == false){
@@ -69,7 +92,7 @@ class PositionController extends Controller {
 			$rules = array(
 				'position_name' => 'required',
 			);
-			$messages = array('position_name.required'=>'The Position name is required.','location_ids.required'=>'Please select atleast one location.','staff_ids.required'=>'Please select atleast one staff member.');
+			$messages = array('position_name.required'=>'The Position name is required.');
 			$validator = Validator::make($userData,$rules,$messages);
 			if($validator->fails()){
 				$errors = $validator->getMessageBag()->toArray();
@@ -125,7 +148,7 @@ class PositionController extends Controller {
 			$rules = array(
 				'position_name' => 'required',
 			);
-			$messages = array('position_name.required'=>'The Position name is required.','location_ids.required'=>'Please select atleast one location.','staff_ids.required'=>'Please select atleast one staff member.');
+			$messages = array('position_name.required'=>'The Position name is required.');
 			$validator = Validator::make($userData,$rules,$messages);
 			if($validator->fails()){
 				$errors = $validator->getMessageBag()->toArray();

@@ -40,7 +40,7 @@
                             <div class="row">
                              <div class="col-md-12">
                               <div class="col-md-offset-3 col-md-6">
-                            	<div class="card-box" style="padding:20px;">
+                            	<div class="card-box">
                             		<h4 class="m-t-0 m-b-30 header-title" style="border-bottom: 1px solid #eee;
 padding-bottom: 18px;"><b>Change Password</b></h4>
                             		<div class="box-header with-border col-md-12" id="success"></div>

@@ -83,7 +83,7 @@
         <!-- jQuery  -->
         <script src="{{ asset('js/jquery.min.js') }}"></script>
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-	
+	<?php print_r( Session::get('Users'));?>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -91,14 +91,14 @@ $(document).ready(function(){
 		var data = $('#form').serialize();
 		$.ajax({
 			type: "POST",
-			url: "<?php url('/Login')?>",
+			url: "<?php echo url('/Login');?>",
 			data: data,
 			dataType: 'json',
 			success: function (res) {
 				$('#verifyMessage').hide();
 				if (res.Status=='success') {
 					$('#success').html('<div class="alert alert-success  alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><span>' + res.message + '</span></div>');
-					window.location.href = '<?php url('/dashboard');?>';
+					window.location.href = '<?php  echo url('/dashboard');?>';
 				} else {
 					$('#success').html('');
 				}

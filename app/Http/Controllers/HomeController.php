@@ -16,18 +16,16 @@ use App\Location;
 use App\StaffDateReminders;
 use DB;
 class HomeController extends Controller {
-	
 	public function index(){
 		return view('home/login');
 	} 
-	public function reports(){
-		return view('reports/index');
-	}
-	public function reports1(){
-		return view('reports/index1');
-	}
 	public function changePassword(){
-		//return $this->authorized();
+	echo 	$var = Session::get('Users.type');exit;
+		if(Session::has('Users') == false){
+			 return redirect('/Login');
+		}else if($var==1||$var==2){
+			return redirect('/Company');
+		}
 		$response =array();
 		$inputData =Input::all(); 
 		$checkString = '';
@@ -87,7 +85,6 @@ class HomeController extends Controller {
 	    
 	return view('home/changePassword')->with('verifyMessage',$verifyMessage);
 	}
-	
 	public function ResetPassword($string){
 		$response =array();
 		$inputData =Input::all(); 
@@ -225,14 +222,9 @@ class HomeController extends Controller {
 	}
 	public function dashboard(){
 		$var = Session::get('Users.type');//exit;
-		if(Session::has('Users') == false){
-			 return redirect('/Login');
-		}else if($var==3){
-			return redirect('/Employee');
-		}
+		
 		return view('home/dashboard');
 	} 
-
 	public function company(){
 		$var = Session::get('Users.type');
 		if(Session::has('Users') == false){
@@ -243,12 +235,310 @@ class HomeController extends Controller {
 		$countries = Country::lists('country_name','country_id');
 		$inputData = array();
 		$inputData = Input::all(); 
+		$company_id = Session::get('Users.company_id');
 		$CompanyDetails = CompanyDetails::where(array('id'=>Session::get('Users.company_id')))->first();
+		$Locationlist = Location::where('locations.location_company_id','=',$company_id)->where('locations.status','!=',4)->orderBy('location_id', 'desc')->get();
+		if(!empty($inputData)){
+		
+			$yearly_company_target = (@$inputData['yearly_company_target']==1)?1:0;
+			$yearly_store_target = (@$inputData['yearly_store_target']==1)?1:0;
+			$monthly_company_target = (@$inputData['monthly_company_target']==1)?1:0;
+			$monthly_store_target = (@$inputData['monthly_store_target']==1)?1:0;
+			//print_r(@$yearly_company_target); echo "==";
+			//print_r(@$yearly_store_target); echo "==";
+			//print_r(@$monthly_company_target); echo "==";
+			//print_r(@$monthly_store_target); echo "==";die;
+			if($yearly_company_target==1){
+				$userData = array(
+				  'company_name' => @$inputData['company_name'],
+				  'country_id'  => @$inputData['country_id'],
+				  'yearly_company_target'  => $yearly_company_target,
+				  'yearly_store_target'  => $yearly_store_target,
+				  'monthly_company_target'  => $monthly_company_target,
+				  'monthly_store_target'  => $monthly_store_target,
+				  'starting_day'  => @$inputData['starting_day'],
+				  'last_year_target'  => @$inputData['last_year_target'],
+				  'percentage_growth'  => @$inputData['percentage_growth'],
+				  'staff_timesheet' => empty(@$inputData['staff_timesheet'])?0:1,
+				  'budget' =>  empty(@$inputData['budget'])?0:1,
+				  'labor_cost' =>  empty(@$inputData['labor_cost'])?0:1,
+				  'labor_hours'=>  empty(@$inputData['labor_hours'])?0:1,
+				  'labor_adjustment'=>  empty(@$inputData['labor_adjustment'])?0:1,
+				  'sales_per_hour'=>  empty(@$inputData['sales_per_hour'])?0:1,
+				  'notes'=>  empty(@$inputData['notes'])?0:1,
+				  'time_format'=>empty(@$inputData['time_format'])?'24':'12'
+				);
+				$rules = array(
+					'company_name'=> 'required',
+					'country_id' => 'required',
+					'starting_day' => 'required',
+					'last_year_target'=> 'required',
+					'percentage_growth'=> 'required',
+					'budget'=> 'required',
+				);
+			}
+			elseif($yearly_store_target==1){
+				$userData = array(
+				  'company_name' => @$inputData['company_name'],
+				  'country_id'  => @$inputData['country_id'],
+				  'yearly_store_target'    => $yearly_store_target,
+				  'yearly_company_target'  => $yearly_company_target,
+				  'monthly_company_target' => $monthly_company_target,
+				   'monthly_store_target'  => $monthly_store_target,
+				  'starting_day'  => @$inputData['starting_day'],
+				  'store_last_year_target'  => @$inputData['store_last_year_target'],
+				  'store_percentage_growth'  => @$inputData['store_percentage_growth'],
+				  'staff_timesheet' => empty(@$inputData['staff_timesheet'])?0:1,
+				  'budget' =>  empty(@$inputData['budget'])?0:1,
+				  'labor_cost' =>  empty(@$inputData['labor_cost'])?0:1,
+				  'labor_hours'=>  empty(@$inputData['labor_hours'])?0:1,
+				  'labor_adjustment'=>  empty(@$inputData['labor_adjustment'])?0:1,
+				  'sales_per_hour'=>  empty(@$inputData['sales_per_hour'])?0:1,
+				  'notes'=>  empty(@$inputData['notes'])?0:1,
+				  'time_format'=>empty(@$inputData['time_format'])?'24':'12'
+				);
+				$rules = array(
+					'company_name'=> 'required',
+					'country_id' => 'required',
+					'starting_day' => 'required',
+					'store_last_year_target'=> 'required',
+					'store_percentage_growth'=> 'required',
+					'budget'=> 'required',
+				);
+			}
+			elseif($monthly_company_target==1){
+				$userData = array(
+				  'company_name'=> @$inputData['company_name'],
+				  'country_id'  => @$inputData['country_id'],
+				  'starting_day'=> @$inputData['starting_day'],
+				  'yearly_store_target'  => $yearly_store_target,
+				  'monthly_company_target'  => $monthly_company_target,
+				  'yearly_company_target'  => $yearly_company_target,
+				  'monthly_store_target'  => $monthly_store_target,
+				  'last_month_target_1'  => @$inputData['last_month_target_1'],
+				  'last_month_percentage_growth_1' => @$inputData['last_month_percentage_growth_1'],
+				  'last_month_target_2'  => @$inputData['last_month_target_2'],
+				  'last_month_percentage_growth_2' => @$inputData['last_month_percentage_growth_2'],
+				  'last_month_target_3'  => @$inputData['last_month_target_3'],
+				  'last_month_percentage_growth_3' => @$inputData['last_month_percentage_growth_3'],
+				  'last_month_target_4'  => @$inputData['last_month_target_4'],
+				  'last_month_percentage_growth_4' => @$inputData['last_month_percentage_growth_4'],
+				  'last_month_target_5'  => @$inputData['last_month_target_5'],
+				  'last_month_percentage_growth_5' => @$inputData['last_month_percentage_growth_5'],
+				  'last_month_target_6'  => @$inputData['last_month_target_6'],
+				  'last_month_percentage_growth_6' => @$inputData['last_month_percentage_growth_6'],
+				  'last_month_target_7'  => @$inputData['last_month_target_7'],
+				  'last_month_percentage_growth_7' => @$inputData['last_month_percentage_growth_7'],
+				  'last_month_target_8'  => @$inputData['last_month_target_8'],
+				  'last_month_percentage_growth_8' => @$inputData['last_month_percentage_growth_8'],
+				  'last_month_target_9'  => @$inputData['last_month_target_9'],
+				  'last_month_percentage_growth_9' => @$inputData['last_month_percentage_growth_9'],
+				  'last_month_target_10'  => @$inputData['last_month_target_10'],
+				  'last_month_percentage_growth_10' => @$inputData['last_month_percentage_growth_10'],
+				  'last_month_target_11'  => @$inputData['last_month_target_11'],
+				  'last_month_percentage_growth_11' => @$inputData['last_month_percentage_growth_11'],
+				  'last_month_target_12'  => @$inputData['last_month_target_12'],
+				  'last_month_percentage_growth_12' => @$inputData['last_month_percentage_growth_12'],
+				  'staff_timesheet' => empty(@$inputData['staff_timesheet'])?0:1,
+				  'budget' =>  empty(@$inputData['budget'])?0:1,
+				  'labor_cost' =>  empty(@$inputData['labor_cost'])?0:1,
+				  'labor_hours'=>  empty(@$inputData['labor_hours'])?0:1,
+				  'labor_adjustment'=>  empty(@$inputData['labor_adjustment'])?0:1,
+				  'sales_per_hour'=>  empty(@$inputData['sales_per_hour'])?0:1,
+				  'notes'=>  empty(@$inputData['notes'])?0:1,
+				  'time_format'=>empty(@$inputData['time_format'])?'24':'12'
+				);
+				$rules = array(
+					'company_name'=> 'required',
+					'country_id' => 'required',
+					'starting_day' => 'required',
+					'budget'=> 'required',
+				);
+			}
+				elseif($monthly_store_target==1){
+				$userData = array(
+				  'company_name'=> @$inputData['company_name'],
+				  'country_id'  => @$inputData['country_id'],
+				  'yearly_store_target'  => $yearly_store_target,
+				  'monthly_store_target'  => $monthly_store_target,
+				  'monthly_company_target'  => $monthly_company_target,
+				  'yearly_company_target'  => $yearly_company_target,
+				  'starting_day'=> @$inputData['starting_day'],
+				  'last_month_store_target_1'  => @$inputData['last_month_store_target_1'],
+				  'last_month_store_percentage_growth_1' => @$inputData['last_month_store_percentage_growth_1'],
+				  'last_month_store_target_2'  => @$inputData['last_month_store_target_2'],
+				  'last_month_store_percentage_growth_2' => @$inputData['last_month_store_percentage_growth_2'],
+				  'last_month_store_target_3'  => @$inputData['last_month_store_target_3'],
+				  'last_month_store_percentage_growth_3' => @$inputData['last_month_store_percentage_growth_3'],
+				  'last_month_store_target_4'  => @$inputData['last_month_store_target_4'],
+				  'last_month_store_percentage_growth_4' => @$inputData['last_month_store_percentage_growth_4'],
+				  'last_month_store_target_5'  => @$inputData['last_month_store_target_5'],
+				  'last_month_store_percentage_growth_5' => @$inputData['last_month_store_percentage_growth_5'],
+				  'last_month_store_target_6'  => @$inputData['last_month_store_target_6'],
+				  'last_month_store_percentage_growth_6' => @$inputData['last_month_store_percentage_growth_6'],
+				  'last_month_store_target_7'  => @$inputData['last_month_store_target_7'],
+				  'last_month_store_percentage_growth_7' => @$inputData['last_month_store_percentage_growth_7'],
+				  'last_month_store_target_8'  => @$inputData['last_month_store_target_8'],
+				  'last_month_store_percentage_growth_8' => @$inputData['last_month_store_percentage_growth_8'],
+				  'last_month_store_target_9'  => @$inputData['last_month_store_target_9'],
+				  'last_month_store_percentage_growth_9' => @$inputData['last_month_store_percentage_growth_9'],
+				  'last_month_store_target_10'  => @$inputData['last_month_store_target_10'],
+				  'last_month_store_percentage_growth_10' => @$inputData['last_month_store_percentage_growth_10'],
+				  'last_month_store_target_11'  => @$inputData['last_month_store_target_11'],
+				  'last_month_store_percentage_growth_11' => @$inputData['last_month_store_percentage_growth_11'],
+				  'last_month_store_target_12'  => @$inputData['last_month_store_target_12'],
+				  'last_month_store_percentage_growth_12' => @$inputData['last_month_store_percentage_growth_12'],
+				  'staff_timesheet' => empty(@$inputData['staff_timesheet'])?0:1,
+				  'budget' =>  empty(@$inputData['budget'])?0:1,
+				  'labor_cost' =>  empty(@$inputData['labor_cost'])?0:1,
+				  'labor_hours'=>  empty(@$inputData['labor_hours'])?0:1,
+				  'labor_adjustment'=>  empty(@$inputData['labor_adjustment'])?0:1,
+				  'sales_per_hour'=>  empty(@$inputData['sales_per_hour'])?0:1,
+				  'notes'=>  empty(@$inputData['notes'])?0:1,
+				  'time_format'=>empty(@$inputData['time_format'])?'24':'12'
+				);
+				$rules = array(
+					'company_name'=> 'required',
+					'country_id' => 'required',
+					'starting_day' => 'required',
+					'budget'=> 'required',
+				);
+			}
+			$messages = array('country_id.required'=>'Please select Country Name.');
+			$validator = Validator::make($userData,$rules,$messages);
+			$remainder =0;
+			// For location Percentage sum is equal to 100 
+			$total = 0;
+			$total_count = array();
+			$total_count['location_monthly_store_target'] = 0;
+			if($yearly_company_target==1){
+				
+				foreach($Locationlist as $location){
+					$location_id = $location['location_id'];
+					$total = $total+ $inputData['location_percentage_'.$location_id];
+				}
+				
+			}elseif($monthly_company_target==1){
+				foreach($Locationlist as $location){
+					$location_id = $location['location_id'];
+					for($j=1;$j<=12;$j++){
+						$total_count['location_monthly_store_target']= $total_count['location_monthly_store_target']+$inputData['location_monthly_store_target_'.$j.$location_id];
+						$total = $total+$inputData['location_monthly_store_target_'.$j.$location_id];
+					}
+				}
+				$remainder = $total%100;
+			}
+			//print_r($remainder);die;
+			if(($remainder>0)&&($monthly_company_target==1)){
+				$response =array(
+					  'Status' => 'danger',
+					  'message' => 'Location Percentage growth for every month should be 100%.'
+					);
+			}elseif(($total!=100)&&($yearly_company_target==1)){
+				$response =array(
+					  'Status' => 'danger',
+					  'message' => 'Location Percentage growth should be 100%.'
+					);
+			}elseif($validator->fails()){
+
+			$errors = $validator->getMessageBag()->toArray();
+			foreach($errors as $error){
+				$erMsg = $error[0];
+				break;
+			}
+			$response =array(
+					  'Status' => 'danger',
+					  'message' => $erMsg
+					);
+				
+			}else{
+			
+			  if(empty($CompanyDetails)){
+				//$userData['user_id'] = Session::get('Users.id');
+				if(CompanyDetails::create($userData)){
+					$response = array(
+					'Status' => 'success',
+				    'message' => 'Company Details inserted successfully.'
+			        );
+				}else{
+					$response = array(
+					'Status' => 'danger',
+				    'message' => 'Something went wrong. Please insert try again later !!'
+			        );
+				}
+			  }else{
+				 $id = $CompanyDetails['id'];
+				//print_r($userData);die;
+				  //rint_r($id);
+				 //B::enableQueryLog();
+//ser = CompanyDetails::where('id',$id)->update($userData);
+//ery = DB::getQueryLog();
+//uery = end($query);
+//int_r($query);die;
+				
+				  if(CompanyDetails::where('id', $id)->update($userData)){
+					if($yearly_company_target==1){  
+						 foreach($Locationlist as $location){
+							$location_id = $location['location_id'];
+							Location::where('location_id', $location_id)->update(array('location_target_percentage'=>$inputData['location_percentage_'.$location_id]));	 
+						}
+					}elseif($monthly_company_target==1){  
+						
+						foreach($Locationlist as $location){
+							$location_id = $location['location_id'];
+							$location_monthly_store_target = array();
+							for($j=1;$j<=12;$j++){
+								$location_monthly_store_target['location_monthly_store_target_'.$j] = $inputData['location_monthly_store_target_'.$j.'_'.$location_id];
+								//print_r($inputData['location_monthly_store_target_'.$j.'_'.$location_id]);
+							}
+							Location::where('location_id', $location_id)->update($location_monthly_store_target);	 
+						}
+					}
+					  
+					$CompanyDetails = CompanyDetails::where('id','=',$id)->first();
+					Session::put('CompanyDetails',$CompanyDetails->toArray());
+					  $response = array(
+					'Status' => 'success',
+				    'message' => 'Company Details updated successfully.'
+			        );
+				  }else{
+					  $response = array(
+					'Status' => 'danger',
+				    'message' => 'Something went wrong. Please update try again later !!'
+			        );
+				  }
+				}
+			}
+			return Response::json($response);
+			die;
+		}
+		
+		$HolidayLists = HolidayLists::where(array('company_id'=>Session::get('Users.company_id')))->where('holiday_lists.status', '!=' ,4)->leftJoin('companydetails', 'companydetails.id', '=', 'holiday_lists.company_id')->leftJoin('countries', 'countries.country_id', '=', 'holiday_lists.country_id')->select('companydetails.company_name','countries.country_name','holiday_lists.*')->get();
+		$StaffDateReminders = StaffDateReminders::where(array('company_id'=>Session::get('Users.company_id')))->where('staff_datereminders.status', '!=' ,4)->get();
+		$CompanyDetails = CompanyDetails::where(array('id'=>Session::get('Users.company_id')))->first();
+		return view('home/company')->with('countries',$countries)->with('Locationlist',$Locationlist)->with('CompanyDetails',$CompanyDetails)->with('HolidayLists',$HolidayLists)->with('StaffDateReminders',$StaffDateReminders);
+	} 
+	public function company1(){
+		$var = Session::get('Users.type');
+		if(Session::has('Users') == false){
+			 return redirect('/Login');
+		}else if($var==3){
+			return redirect('/Employee');
+		}
+		
+		$countries = Country::lists('country_name','country_id');
+		$inputData = array();
+		$inputData = Input::all(); 
+		$company_id = Session::get('Users.company_id');
+		$CompanyDetails = CompanyDetails::where(array('id'=>Session::get('Users.company_id')))->first();
+		$Locationlist = Location::where('locations.location_company_id','=',$company_id)->where('locations.status','!=',4)->orderBy('location_id', 'desc')->get();
 		if(!empty($inputData)){
 			$userData = array(
 			  'company_name' => @$inputData['company_name'],
 			  'country_id'  => @$inputData['country_id'],
 			  'starting_day'  => @$inputData['starting_day'],
+			  'last_year_target'  => @$inputData['last_year_target'],
+			  'percentage_growth'  => @$inputData['percentage_growth'],
 			  'staff_timesheet' => empty(@$inputData['staff_timesheet'])?0:1,
 			  'budget' =>  empty(@$inputData['budget'])?0:1,
 			  'labor_cost' =>  empty(@$inputData['labor_cost'])?0:1,
@@ -262,12 +552,25 @@ class HomeController extends Controller {
 				'company_name'=> 'required',
 				'country_id' => 'required',
 				'starting_day' => 'required',
+				'last_year_target'=> 'required',
+				'percentage_growth'=> 'required',
 				'budget'=> 'required',
-				
 			);
 			$messages = array('country_id.required'=>'Please select Country Name.');
 			$validator = Validator::make($userData,$rules);
-			if($validator->fails()){
+			// For location Percentage sum is equal to 100 
+			$total =0;
+			foreach($Locationlist as $location){
+				$location_id = $location['location_id'];
+			    $total = $total+ $inputData['location_percentage_'.$location_id];
+			}
+			if($total!=100){
+					$response =array(
+						  'Status' => 'danger',
+						  'message' => 'Location Percentage growth should be 100%.'
+						);
+			}
+			elseif($validator->fails()){
 				$errors = $validator->getMessageBag()->toArray();
 				foreach($errors as $error){
 					$erMsg = $error[0];
@@ -295,6 +598,10 @@ class HomeController extends Controller {
 			  }else{
 				  $id = $CompanyDetails['id'];
 				  if(CompanyDetails::where('id', $id)->update($userData)){
+					 foreach($Locationlist as $location){
+						$location_id = $location['location_id'];
+						Location::where('location_id', $location_id)->update(array('location_target_percentage'=>$inputData['location_percentage_'.$location_id]));	 
+			    	}
 					$CompanyDetails = CompanyDetails::where('id','=',$id)->first();
 					Session::put('CompanyDetails',$CompanyDetails->toArray());
 					  $response = array(
@@ -312,10 +619,11 @@ class HomeController extends Controller {
 			return Response::json($response);
 			die;
 		}
+		
 		$HolidayLists = HolidayLists::where(array('company_id'=>Session::get('Users.company_id')))->where('holiday_lists.status', '!=' ,4)->leftJoin('companydetails', 'companydetails.id', '=', 'holiday_lists.company_id')->leftJoin('countries', 'countries.country_id', '=', 'holiday_lists.country_id')->select('companydetails.company_name','countries.country_name','holiday_lists.*')->get();
 		$StaffDateReminders = StaffDateReminders::where(array('company_id'=>Session::get('Users.company_id')))->where('staff_datereminders.status', '!=' ,4)->get();
 		$CompanyDetails = CompanyDetails::where(array('id'=>Session::get('Users.company_id')))->first();
-		return view('home/company')->with('countries',$countries)->with('CompanyDetails',$CompanyDetails)->with('HolidayLists',$HolidayLists)->with('StaffDateReminders',$StaffDateReminders);
+		return view('home/company1')->with('countries',$countries)->with('Locationlist',$Locationlist)->with('CompanyDetails',$CompanyDetails)->with('HolidayLists',$HolidayLists)->with('StaffDateReminders',$StaffDateReminders);
 	} 
 	public function staff(){
 		$var = Session::get('Users.type');//exit;
@@ -326,12 +634,11 @@ class HomeController extends Controller {
 		}
 		$user_id = Session::get('Users.id');
 		$company_id = Session::get('CompanyDetails.id');
-		$Userlist = User::where('users.company_id','=',$company_id)->get();
+		$Userlist = User::where('users.company_id','=',$company_id)->where('status','!=',4)->get();
 		$PositionList = Position::where('positions.company_id','=',$company_id)->where('positions.status','!=',4)->get();
 		$Locationlist = Location::where('locations.location_company_id','=',$company_id)->where('locations.status','!=',4)->get();
 		return view('home/staff')->with('Userlists',$Userlist)->with('PositionList',$PositionList->toArray())->with('Locationlist',$Locationlist->toArray());
-	}
-	
+	}	
 	public function login($string =''){
 		$verifyMessage = array();
 		if (Session::has('Users') ==  true){
@@ -375,8 +682,7 @@ class HomeController extends Controller {
 					$erMsg = $error[0];
 					break;
 				}
-				$response = array(
-						  'Status' => 'danger',
+				$response = array( 'Status' => 'danger',
 						  'message' => $erMsg
 						);
 			}	
@@ -384,28 +690,24 @@ class HomeController extends Controller {
 				$User = User::where('status', '=', 1)->where('password', '=', md5($userData['password']))->where('email', '=', $userData['email'])->first();
 				//print_r($User);
 				if (isset($User)){
-					
 					$users = $User->toArray();
 					Session::put(['Users'=>$users]);
 					$CompanyDetails = CompanyDetails::where('id','=',Session::get('Users.company_id'))->first();
-					Session::put('CompanyDetails',$CompanyDetails->toArray());
+					$CompanyDetails = !empty($CompanyDetails)?@$CompanyDetails->toArray():'';
+					Session::put('CompanyDetails',@$CompanyDetails);
 					//print_r(Session::get('Users'));
 					$response = array(
 						  'Status' => 'success',
 						  'message' =>'Logged in successfully!!'
 						);
 				}else{
-					$response = array(
-						  'Status' => 'danger',
-						  'message' =>'Invalid Login Details!!'
-						);
+					$response = array('Status' => 'danger','message' =>'Invalid Login Details!!');
 				}
 			}
 			return Response::json($response);die;
 		}
 		return view('home/login')->with('verifyMessage',$verifyMessage);
 	}
-
 	public function register(){
 		if (Session::has('Users') ==  true){
 			return redirect('/dashboard');
@@ -469,5 +771,4 @@ class HomeController extends Controller {
 		}
 		return view('home/register')->with('response',$response)->with('inputData',$inputData);
 	} 
-
 }
